@@ -1,22 +1,21 @@
 "use client";
-
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { AppButton } from "@/components/common/AppButton";
+import { AppButton } from "@/components/common";
 import { CheckCircle2 } from "lucide-react";
-
 interface SignupStepFourProps {
   userName: string;
 }
-
-export function SignupStepFour({ userName }: SignupStepFourProps) {
+export function SignupStepFour({
+  userName,
+}: SignupStepFourProps): React.JSX.Element {
   const router = useRouter();
-
-  useEffect(() => {
-    const timeout = setTimeout(() => router.push("/dashboard"), 5000);
-    return () => clearTimeout(timeout);
+  useEffect((): (() => void) => {
+    const timeout = setTimeout((): void => {
+      router.push("/dashboard");
+    }, 5000);
+    return (): void => clearTimeout(timeout);
   }, [router]);
-
   return (
     <div className="text-center space-y-6 py-4">
       <div className="flex justify-center">
@@ -34,7 +33,9 @@ export function SignupStepFour({ userName }: SignupStepFourProps) {
       <AppButton
         label="Go to Dashboard"
         className="w-full"
-        onClick={() => router.push("/dashboard")}
+        onClick={(): void => {
+          router.push("/dashboard");
+        }}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
-
-import { LayoutDashboard, LogOut, Settings, User, ChevronUp } from "lucide-react";
+import * as React from "react";
+import { LayoutDashboard, LogOut, Settings, User } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -9,31 +9,28 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
+  SidebarRail,
 } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logoutRequest } from "@/features/auth/store";
-
 export function AppSidebar() {
   const pathname = usePathname();
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
-
   const handleLogout = () => {
     dispatch(logoutRequest());
   };
-
   const initials = user?.name
     ? user.name
         .split(" ")
@@ -41,75 +38,80 @@ export function AppSidebar() {
         .join("")
         .toUpperCase()
     : "U";
-
   return (
-    <Sidebar variant="sidebar" collapsible="icon">
-      <SidebarHeader className="p-4">
-        <Link href="/dashboard" className="flex items-center gap-2 px-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <LayoutDashboard className="h-5 w-5" />
+    <Sidebar collapsible="icon">
+      <SidebarHeader className="flex h-12 items-center px-4">
+        <div className="flex items-center gap-2 font-bold">
+          <div className="flex h-6 w-6 items-center justify-center rounded bg-primary text-primary-foreground">
+            <LayoutDashboard className="h-4 w-4" />
           </div>
-          <span className="text-xl font-bold tracking-tight">Invonix</span>
-        </Link>
+          <span className="truncate group-data-[collapsible=icon]:hidden">
+            Invonix
+          </span>
+        </div>
       </SidebarHeader>
-
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === "/dashboard"}
-                  tooltip="Dashboard"
-                >
-                  <Link href="/dashboard">
-                    <LayoutDashboard className="h-4 w-4" />
-                    <span>Dashboard</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              {/* Other menu items would go here */}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <SidebarMenu className="px-2">
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              render={(props: any) => <Link {...props} href="/dashboard" />}
+              isActive={pathname === "/dashboard"}
+              tooltip="Dashboard"
+            >
+              <LayoutDashboard />
+              <span>Dashboard</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarContent>
-
-      <SidebarFooter className="p-4">
+      <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size="lg"
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                >
-                  <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarFallback className="rounded-lg bg-primary/10 text-primary">
-                      {initials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{user?.name}</span>
-                    <span className="truncate text-xs text-muted-foreground">
-                      {user?.email}
-                    </span>
-                  </div>
-                  <ChevronUp className="ml-auto size-4" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
+              <DropdownMenuTrigger
+                render={(props: any) => (
+                  <SidebarMenuButton
+                    {...props}
+                    size="lg"
+                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                  >
+                    <Avatar className="h-8 w-8 rounded-lg">
+                      <AvatarFallback className="rounded-lg bg-primary/10 text-primary">
+                        {initials}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                      <span className="truncate font-semibold">
+                        {user?.name || "User"}
+                      </span>
+                      <span className="truncate text-xs text-muted-foreground">
+                        {user?.email || "user@example.com"}
+                      </span>
+                    </div>
+                  </SidebarMenuButton>
+                )}
+              />
               <DropdownMenuContent
-                side="top"
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                className="w-56 rounded-lg"
+                side="bottom"
+                align="end"
+                sideOffset={4}
               >
-                <DropdownMenuItem asChild>
-                  <Link href="/dashboard/settings" className="flex items-center gap-2">
+                <DropdownMenuGroup>
+                  <DropdownMenuItem className="gap-2">
+                    <User className="h-4 w-4" />
+                    Account
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="gap-2">
                     <Settings className="h-4 w-4" />
-                    <span>Settings</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
+                    Settings
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="gap-2 text-destructive"
+                >
                   <LogOut className="h-4 w-4" />
                   <span>Logout</span>
                 </DropdownMenuItem>
@@ -118,6 +120,7 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }

@@ -6,7 +6,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-
 interface AppCardProps {
   title?: string;
   description?: string;
@@ -14,23 +13,20 @@ interface AppCardProps {
   headerContent?: React.ReactNode;
   children: React.ReactNode;
 }
-
 export function AppCard({
-  title,
-  description,
+  title = "Card Title",
+  description = "Card Description",
   className,
   headerContent,
   children,
 }: AppCardProps) {
   return (
     <Card className={cn("w-full", className)}>
-      {(title || description || headerContent) && (
-        <CardHeader>
-          {title && <CardTitle>{title}</CardTitle>}
-          {description && <CardDescription>{description}</CardDescription>}
-          {headerContent}
-        </CardHeader>
-      )}
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+        {headerContent}
+      </CardHeader>
       <CardContent>{children}</CardContent>
     </Card>
   );

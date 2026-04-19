@@ -1,40 +1,35 @@
 "use client";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupStepOneSchema } from "@/features/auth/schema";
-import { AppInput } from "@/components/common/AppInput";
-import { AppPasswordInput } from "@/components/common/AppPasswordInput";
-import { AppButton } from "@/components/common/AppButton";
-
-interface StepOneData {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
-
-interface SignupStepOneProps {
-  onNext: (data: StepOneData) => void;
-  initialData?: Partial<StepOneData>;
-}
-
-export function SignupStepOne({ onNext, initialData }: SignupStepOneProps) {
+import { AppInput, AppPasswordInput, AppButton } from "@/components/common";
+import type {
+  SignupStepOneFormValues,
+  SignupStepOneProps,
+} from "@/features/auth/types";
+export function SignupStepOne({
+  onNext,
+  initialData,
+}: SignupStepOneProps): React.JSX.Element {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<StepOneData>({
+  } = useForm<SignupStepOneFormValues>({
     resolver: zodResolver(signupStepOneSchema),
     defaultValues: {
       name: initialData?.name ?? "",
       email: initialData?.email ?? "",
       password: initialData?.password ?? "",
-      confirmPassword: initialData?.confirmPassword ?? "",
+      confirmPassword: (initialData as any)?.confirmPassword ?? "",
     },
   });
-  const handleFormSubmit = handleSubmit(onNext);
-
+  const handleFormSubmit = handleSubmit(
+    (data: SignupStepOneFormValues): void => {
+      const { confirmPassword, ...rest } = data;
+      onNext(rest);
+    },
+  );
   return (
     <form onSubmit={handleFormSubmit} className="space-y-4">
       <AppInput

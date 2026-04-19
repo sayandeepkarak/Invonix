@@ -1,30 +1,29 @@
-"use client"
-
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { useAppDispatch, useAppSelector } from "@/store/hooks"
-import { autoLoginRequest } from "@/features/auth/store"
-
+"use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { autoLoginRequest } from "@/features/auth/store";
+import { Loader2 } from "lucide-react";
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAppSelector((state) => state.auth)
-  const dispatch = useAppDispatch()
-  const router = useRouter()
-  const [checked, setChecked] = useState<boolean>(false)
-
+  const { isAuthenticated, isLoading, isInitialized } = useAppSelector(
+    (state) => state.auth,
+  );
+  const dispatch = useAppDispatch();
+  const router = useRouter();
   useEffect(() => {
-    dispatch(autoLoginRequest())
-  }, [dispatch])
-
-  useEffect(() => {
-    if (!isLoading) {
-      setChecked(true)
-      if (!isAuthenticated) {
-        router.replace("/auth/login")
-      }
+    if (!isInitialized && !isLoading) {
+      dispatch(autoLoginRequest());
+    } else if (isInitialized && !isAuthenticated) {
+      router.replace("/auth/login");
     }
-  }, [isLoading, isAuthenticated, router])
-
-  if (!checked || isLoading || !isAuthenticated) return null
-
-  return <>{children}</>
+  }, [isInitialized, isAuthenticated, router]);
+  if (!isInitialized || (isLoading && !isAuthenticated)) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+  if (!isAuthenticated) return null;
+  return <>{children}</>;
 }

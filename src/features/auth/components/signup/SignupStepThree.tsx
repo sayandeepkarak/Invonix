@@ -1,49 +1,44 @@
 "use client";
-
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupStepThreeSchema } from "@/features/auth/schema";
 import { BUSINESS_TYPES } from "@/features/auth/const";
-import { AppInput } from "@/components/common/AppInput";
-import { AppSelect } from "@/components/common/AppSelect";
-import { AppCheckbox } from "@/components/common/AppCheckbox";
-import { AppButton } from "@/components/common/AppButton";
-
-interface StepThreeData {
-  businessName: string;
-  businessType: string;
-  phone: string;
-  termsAccepted: true;
-}
-
-interface SignupStepThreeProps {
-  onNext: (data: StepThreeData) => void;
-  onBack: () => void;
-  initialData?: Partial<StepThreeData>;
-}
-
+import {
+  AppInput,
+  AppSelect,
+  AppCheckbox,
+  AppButton,
+} from "@/components/common";
+import type {
+  SignupStepThreeFormValues,
+  SignupStepThreeProps,
+} from "@/features/auth/types";
 export function SignupStepThree({
   onNext,
   onBack,
   initialData,
-}: SignupStepThreeProps) {
+}: SignupStepThreeProps): React.JSX.Element {
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<StepThreeData>({
+  } = useForm<SignupStepThreeFormValues>({
     resolver: zodResolver(signupStepThreeSchema),
     defaultValues: {
       businessName: initialData?.businessName ?? "",
       businessType: initialData?.businessType ?? "",
       phone: initialData?.phone ?? "",
-      termsAccepted: (initialData?.termsAccepted ?? false) as any,
+      termsAccepted: (initialData as any)?.termsAccepted ?? false,
     },
   });
-  const handleFormSubmit = handleSubmit(onNext);
-
-  function handleBack() {
+  const handleFormSubmit = handleSubmit(
+    (data: SignupStepThreeFormValues): void => {
+      const { termsAccepted, ...rest } = data;
+      onNext(rest);
+    },
+  );
+  function handleBack(): void {
     onBack();
   }
   return (
@@ -55,7 +50,6 @@ export function SignupStepThree({
         error={errors.businessName?.message}
         {...register("businessName")}
       />
-
       <Controller
         name="businessType"
         control={control}
@@ -71,7 +65,6 @@ export function SignupStepThree({
           />
         )}
       />
-
       <AppInput
         id="signup-phone"
         label="Phone Number"
@@ -80,7 +73,6 @@ export function SignupStepThree({
         error={errors.phone?.message}
         {...register("phone")}
       />
-
       <Controller
         name="termsAccepted"
         control={control}
@@ -94,7 +86,6 @@ export function SignupStepThree({
           />
         )}
       />
-
       <div className="flex gap-2">
         <AppButton
           label="Back"

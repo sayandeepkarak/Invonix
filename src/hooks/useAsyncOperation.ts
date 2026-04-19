@@ -1,10 +1,7 @@
 "use client";
-
 import { useState } from "react";
-
 export function useAsyncOperation() {
   const [isLoading, setIsLoading] = useState(false);
-
   async function manageAsyncOperation(
     callback: () => Promise<unknown>,
     errCallback?: (error: unknown) => unknown,
@@ -21,7 +18,6 @@ export function useAsyncOperation() {
       loadingCallback?.(false);
     }
   }
-
   return {
     isLoading,
     manageAsyncOperation,

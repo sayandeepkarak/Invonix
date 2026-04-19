@@ -1,6 +1,2 @@
-export { LoginForm } from "@/features/auth/components/LoginForm"
-export { SignupForm } from "@/features/auth/components/SignupForm"
-export { SignupStepOne } from "@/features/auth/components/SignupStepOne"
-export { SignupStepTwo } from "@/features/auth/components/SignupStepTwo"
-export { SignupStepThree } from "@/features/auth/components/SignupStepThree"
-export { SignupStepFour } from "@/features/auth/components/SignupStepFour"
+export * from "./login/LoginForm";
+export * from "./signup/SignupForm";

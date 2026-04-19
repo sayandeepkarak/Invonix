@@ -1,9 +1,8 @@
 interface AppStepperProps {
-  steps: readonly string[]
-  currentStep: number
-  children: React.ReactNode
+  steps: readonly string[];
+  currentStep: number;
+  children: React.ReactNode;
 }
-
 export function AppStepper({ steps, currentStep, children }: AppStepperProps) {
   return (
     <div className="space-y-4">
@@ -17,5 +16,5 @@ export function AppStepper({ steps, currentStep, children }: AppStepperProps) {
       </div>
       {children}
     </div>
-  )
+  );
 }
