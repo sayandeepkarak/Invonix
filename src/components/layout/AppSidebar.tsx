@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import { LayoutDashboard, LogOut, Settings, User } from "lucide-react";
+import { LayoutDashboard, LogOut, Package, Settings, User } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -60,6 +60,18 @@ export function AppSidebar() {
             >
               <LayoutDashboard />
               <span>Dashboard</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              render={(props: any) => (
+                <Link {...props} href="/dashboard/inventory" />
+              )}
+              isActive={pathname === "/dashboard/inventory"}
+              tooltip="Inventory"
+            >
+              <Package />
+              <span>Inventory</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

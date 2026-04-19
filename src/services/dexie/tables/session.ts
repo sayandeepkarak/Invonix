@@ -1,18 +1,41 @@
-import { db } from "@/services/dexie/connection"
-import type { Session } from "@/features/auth/types"
-const TABLE_NAME: string = "sessions"
+import { db } from "@/services/dexie/connection";
+import { manageAsyncOperation } from "@/lib/utils";
+import type { Session } from "@/features/auth/types";
+
+const TABLE_NAME: string = "sessions";
+
 async function createSession(session: Session): Promise<void> {
-  await db.table(TABLE_NAME).clear()
-  await db.table(TABLE_NAME).add(session)
+  await manageAsyncOperation(
+    async () => {
+      await db.table(TABLE_NAME).clear();
+      await db.table(TABLE_NAME).add(session);
+    },
+    (error) => {
+      throw new Error(`Failed to create session: ${error}`);
+    },
+  );
 }
+
 async function getActiveSession(): Promise<Session | undefined> {
-  return db.table(TABLE_NAME).toCollection().first()
+  return await manageAsyncOperation(
+    () => db.table(TABLE_NAME).toCollection().first(),
+    (error) => {
+      throw new Error(`Database error: ${error}`);
+    },
+  );
 }
+
 async function clearSessions(): Promise<void> {
-  await db.table(TABLE_NAME).clear()
+  await manageAsyncOperation(
+    () => db.table(TABLE_NAME).clear(),
+    (error) => {
+      throw new Error(`Failed to clear sessions: ${error}`);
+    },
+  );
 }
+
 export const sessionsTable = {
   createSession,
   getActiveSession,
   clearSessions,
-}
+};
