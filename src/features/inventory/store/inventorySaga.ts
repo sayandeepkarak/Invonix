@@ -18,8 +18,8 @@ import type {
 
 function* handleFetchProducts() {
   try {
-    const products: Product[] = yield call(productsTable.getAll);
-    yield put(fetchProductsSuccess(products.filter((p) => p.isActive)));
+    const products: Product[] | undefined = yield call(productsTable.getAll);
+    yield put(fetchProductsSuccess((products ?? []).filter((p) => p.isActive)));
   } catch (err) {
     yield put(productFailure(String(err)));
   }

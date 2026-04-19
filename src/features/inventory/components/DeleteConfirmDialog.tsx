@@ -35,6 +35,7 @@ export function DeleteConfirmDialog({
             action cannot be undone.
           </DialogDescription>
         </DialogHeader>
+
         <DialogFooter className="gap-2">
           <AppButton label="Cancel" variant="outline" onClick={onClose} />
           <AppButton

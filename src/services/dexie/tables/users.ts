@@ -4,31 +4,22 @@ import type { User } from "@/features/auth/types";
 
 const TABLE_NAME: string = "users";
 
-async function createUser(user: User): Promise<void> {
-  await manageAsyncOperation(
-    () => db.table(TABLE_NAME).add(user),
-    (error) => {
-      throw new Error(`Failed to create user: ${error}`);
-    },
-  );
+function createUser(user: User): Promise<void | undefined> {
+  return manageAsyncOperation<void>(async () => {
+    await db.table(TABLE_NAME).add(user);
+  });
 }
 
-async function getUserByEmail(email: string): Promise<User | undefined> {
-  return await manageAsyncOperation(
-    () => db.table(TABLE_NAME).where("email").equals(email).first(),
-    (error) => {
-      throw new Error(`Database error: ${error}`);
-    },
-  );
+function getUserByEmail(email: string): Promise<User | undefined> {
+  return manageAsyncOperation<User>(async () => {
+    return await db.table(TABLE_NAME).where("email").equals(email).first();
+  });
 }
 
-async function getUserById(id: string): Promise<User | undefined> {
-  return await manageAsyncOperation(
-    () => db.table(TABLE_NAME).get(id),
-    (error) => {
-      throw new Error(`Database error: ${error}`);
-    },
-  );
+function getUserById(id: string): Promise<User | undefined> {
+  return manageAsyncOperation<User>(async () => {
+    return await db.table(TABLE_NAME).get(id);
+  });
 }
 
 export const usersTable = {

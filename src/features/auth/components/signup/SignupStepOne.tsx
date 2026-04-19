@@ -1,4 +1,5 @@
 "use client";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupStepOneSchema } from "@/features/auth/schema";
@@ -7,6 +8,7 @@ import type {
   SignupStepOneFormValues,
   SignupStepOneProps,
 } from "@/features/auth/types";
+
 export function SignupStepOne({
   onNext,
   initialData,
@@ -24,14 +26,14 @@ export function SignupStepOne({
       confirmPassword: (initialData as any)?.confirmPassword ?? "",
     },
   });
-  const handleFormSubmit = handleSubmit(
-    (data: SignupStepOneFormValues): void => {
-      const { confirmPassword, ...rest } = data;
-      onNext(rest);
-    },
-  );
+
+  function onSubmit(data: SignupStepOneFormValues): void {
+    const { confirmPassword, ...rest } = data;
+    onNext(rest);
+  }
+
   return (
-    <form onSubmit={handleFormSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <AppInput
         id="signup-name"
         label="Full Name"
@@ -39,6 +41,7 @@ export function SignupStepOne({
         error={errors.name?.message}
         {...register("name")}
       />
+
       <AppInput
         id="signup-email"
         label="Email"
@@ -47,6 +50,7 @@ export function SignupStepOne({
         error={errors.email?.message}
         {...register("email")}
       />
+
       <AppPasswordInput
         id="signup-password"
         label="Password"
@@ -54,6 +58,7 @@ export function SignupStepOne({
         error={errors.password?.message}
         {...register("password")}
       />
+
       <AppPasswordInput
         id="signup-confirm"
         label="Confirm Password"
@@ -61,6 +66,7 @@ export function SignupStepOne({
         error={errors.confirmPassword?.message}
         {...register("confirmPassword")}
       />
+
       <AppButton label="Continue" type="submit" className="w-full" />
     </form>
   );

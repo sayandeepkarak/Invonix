@@ -22,6 +22,7 @@ import type { ProductFormValues } from "@/features/inventory/schema";
 
 export default function InventoryPage() {
   const dispatch = useAppDispatch();
+
   const { products, selectedProduct, isLoading, isDialogOpen, isEditMode } =
     useAppSelector((state) => state.inventory);
 
@@ -91,16 +92,19 @@ export default function InventoryPage() {
             Manage your products and stock levels.
           </p>
         </div>
+
         <ProductToolbar
           onSearch={handleSearch}
           onAddProduct={handleAddProduct}
         />
+
         <ProductTable
           products={products}
           searchQuery={searchQuery}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
+
         <ProductDialog
           open={isDialogOpen}
           isEdit={isEditMode}
@@ -109,6 +113,7 @@ export default function InventoryPage() {
           onClose={() => dispatch(closeDialog())}
           onSubmit={handleDialogSubmit}
         />
+
         <DeleteConfirmDialog
           open={!!deleteTarget}
           productName={deleteTarget?.name ?? ""}

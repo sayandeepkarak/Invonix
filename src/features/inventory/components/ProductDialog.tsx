@@ -73,6 +73,7 @@ export function ProductDialog({
         <DialogHeader>
           <DialogTitle>{isEdit ? "Edit Product" : "Add Product"}</DialogTitle>
         </DialogHeader>
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <AppInput
@@ -82,6 +83,7 @@ export function ProductDialog({
               error={errors.name?.message}
               {...register("name")}
             />
+
             <AppInput
               id="product-sku"
               label="SKU"
@@ -90,6 +92,7 @@ export function ProductDialog({
               {...register("sku")}
             />
           </div>
+
           <Controller
             name="category"
             control={control}
@@ -105,6 +108,7 @@ export function ProductDialog({
               />
             )}
           />
+
           <AppInput
             id="product-description"
             label="Description"
@@ -112,6 +116,7 @@ export function ProductDialog({
             error={errors.description?.message}
             {...register("description")}
           />
+
           <div className="grid grid-cols-3 gap-4">
             <AppInput
               id="product-price"
@@ -121,6 +126,7 @@ export function ProductDialog({
               error={errors.price?.message}
               {...register("price")}
             />
+
             <AppInput
               id="product-cost-price"
               label="Cost Price"
@@ -129,6 +135,7 @@ export function ProductDialog({
               error={errors.costPrice?.message}
               {...register("costPrice")}
             />
+
             <AppInput
               id="product-sale-price"
               label="Sale Price"
@@ -138,6 +145,7 @@ export function ProductDialog({
               {...register("salePrice")}
             />
           </div>
+
           <div className="grid grid-cols-2 gap-4">
             <AppInput
               id="product-stock"
@@ -147,6 +155,7 @@ export function ProductDialog({
               error={errors.stock?.message}
               {...register("stock")}
             />
+
             <AppInput
               id="product-threshold"
               label="Low Stock Threshold"
@@ -156,6 +165,7 @@ export function ProductDialog({
               {...register("lowStockThreshold")}
             />
           </div>
+
           <AppInput
             id="product-tags"
             label="Tags (comma separated)"
@@ -163,6 +173,7 @@ export function ProductDialog({
             error={errors.tags?.message}
             {...register("tags")}
           />
+
           <DialogFooter className="gap-2">
             <AppButton
               label="Cancel"

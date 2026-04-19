@@ -1,4 +1,4 @@
-export const PRODUCT_CATEGORIES = [
+export const PRODUCT_CATEGORIES = Object.freeze([
   { label: "Electronics", value: "electronics" },
   { label: "Clothing", value: "clothing" },
   { label: "Food & Beverage", value: "food_beverage" },
@@ -9,7 +9,7 @@ export const PRODUCT_CATEGORIES = [
   { label: "Toys & Games", value: "toys_games" },
   { label: "Automotive", value: "automotive" },
   { label: "Other", value: "other" },
-] as const;
+]);
 
 export const DEFAULT_LOW_STOCK_THRESHOLD = 10;
 

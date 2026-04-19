@@ -1,8 +1,10 @@
 "use client";
+
 import { useState, useRef, useEffect } from "react";
 import { DEMO_OTP } from "@/features/auth/const";
 import { AppButton } from "@/components/common";
 import type { SignupStepTwoProps } from "@/features/auth/types";
+
 export function SignupStepTwo({
   onNext,
   onBack,
@@ -10,21 +12,27 @@ export function SignupStepTwo({
 }: SignupStepTwoProps): React.JSX.Element {
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const [error, setError] = useState<string>("");
+
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
-  useEffect((): void => {
+
+  useEffect(() => {
     if (inputRefs.current[0]) {
       inputRefs.current[0].focus();
     }
   }, []);
+
   function handleChange(index: number, value: string): void {
     if (isNaN(Number(value))) return;
+
     const newOtp = [...otp];
     newOtp[index] = value.substring(value.length - 1);
     setOtp(newOtp);
+
     if (value && index < 5 && inputRefs.current[index + 1]) {
       inputRefs.current[index + 1]?.focus();
     }
   }
+
   function handleKeyDown(
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>,
@@ -38,31 +46,39 @@ export function SignupStepTwo({
       inputRefs.current[index - 1]?.focus();
     }
   }
+
   function handlePaste(e: React.ClipboardEvent): void {
     e.preventDefault();
     const data = e.clipboardData.getData("text").substring(0, 6).split("");
     const newOtp = [...otp];
+
     data.forEach((char, i) => {
       if (!isNaN(Number(char)) && i < 6) {
         newOtp[i] = char;
       }
     });
+
     setOtp(newOtp);
   }
+
   function handleVerify(): void {
     const enteredOtp = otp.join("");
+
     if (enteredOtp === DEMO_OTP) {
       onNext();
     } else {
       setError("Invalid verification code. Use 123456 for demo.");
     }
   }
+
   function handleBack(): void {
     onBack();
   }
+
   function handleResend(): void {
     console.log("Resending code...");
   }
+
   return (
     <div className="space-y-6">
       <div className="text-center space-y-2">
@@ -71,6 +87,7 @@ export function SignupStepTwo({
           <span className="font-medium text-foreground">{email}</span>
         </p>
       </div>
+
       <div
         className="flex justify-between gap-2 max-w-75 mx-auto"
         onPaste={handlePaste}
@@ -90,7 +107,9 @@ export function SignupStepTwo({
           />
         ))}
       </div>
+
       {error && <p className="text-sm text-center text-destructive">{error}</p>}
+
       <div className="flex flex-col gap-2">
         <AppButton
           label="Verify & Continue"
@@ -104,6 +123,7 @@ export function SignupStepTwo({
           className="w-full"
         />
       </div>
+
       <p className="text-center text-xs text-muted-foreground">
         Didn&apos;t receive the code?{" "}
         <button onClick={handleResend} className="text-primary hover:underline">

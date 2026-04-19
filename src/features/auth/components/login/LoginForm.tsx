@@ -1,6 +1,8 @@
 "use client";
+
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -14,13 +16,15 @@ import {
   AppCheckbox,
 } from "@/components/common";
 import type { LoginPayload } from "@/features/auth/types";
-import Link from "next/link";
+
 export function LoginForm(): React.JSX.Element {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+
   const { isLoading, error, isAuthenticated } = useAppSelector(
     (state) => state.auth,
   );
-  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -30,20 +34,22 @@ export function LoginForm(): React.JSX.Element {
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "", rememberMe: false },
   });
-  useEffect((): void => {
+
+  useEffect(() => {
     if (isAuthenticated) router.push("/dashboard");
   }, [isAuthenticated, router]);
+
   function onSubmit(data: LoginPayload): void {
     dispatch(loginRequest(data));
   }
-  const handleFormSubmit = handleSubmit(onSubmit);
+
   return (
     <AppCard
       title="Sign in"
       description="Enter your credentials to access your account"
       className="w-full max-w-md"
     >
-      <form onSubmit={handleFormSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <AppInput
           id="login-email"
           label="Email"
@@ -52,6 +58,7 @@ export function LoginForm(): React.JSX.Element {
           error={errors.email?.message}
           {...register("email")}
         />
+
         <AppPasswordInput
           id="login-password"
           label="Password"
@@ -59,6 +66,7 @@ export function LoginForm(): React.JSX.Element {
           error={errors.password?.message}
           {...register("password")}
         />
+
         <Controller
           name="rememberMe"
           control={control}
@@ -71,17 +79,20 @@ export function LoginForm(): React.JSX.Element {
             />
           )}
         />
+
         {error && (
           <div className="rounded-md bg-destructive/10 p-3">
             <p className="text-sm text-destructive">{error}</p>
           </div>
         )}
+
         <AppButton
           label="Sign in"
           type="submit"
           loading={isLoading}
           className="w-full"
         />
+
         <p className="text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{" "}
           <Link
