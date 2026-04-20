@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import { StoreProvider } from "@/components/layout";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const inter = Inter({
@@ -29,7 +30,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans">
         <StoreProvider>
-          <TooltipProvider>{children}</TooltipProvider>
+          <TooltipProvider>
+            {children}
+            <Toaster position="top-right" richColors />
+          </TooltipProvider>
         </StoreProvider>
       </body>
     </html>

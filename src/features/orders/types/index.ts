@@ -1,3 +1,6 @@
+import type { User } from "@/features/auth/types";
+import type { DeliveryAgent } from "@/features/orders/types/agents";
+
 export type OrderStatus =
   | "PENDING"
   | "CONFIRMED"
@@ -15,30 +18,21 @@ export interface OrderItem {
 
 export interface Order {
   id: string;
-  customerName: string;
-  customerEmail: string;
-  customerPhone: string;
+  userId: string;
+  agentId?: string;
   items: OrderItem[];
   totalAmount: number;
   status: OrderStatus;
-  notes?: string;
-  assignedAgentId?: string;
   createdAt: string;
   updatedAt: string;
+  user?: User;
+  agent?: DeliveryAgent;
 }
 
 export interface OrderState {
   orders: Order[];
-  selectedOrder: Order | null;
   isLoading: boolean;
   error: string | null;
-}
-
-export interface CreateOrderPayload extends Omit<
-  Order,
-  "id" | "createdAt" | "updatedAt" | "status"
-> {
-  status?: OrderStatus;
 }
 
 export interface UpdateOrderStatusPayload {

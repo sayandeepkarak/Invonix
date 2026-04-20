@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeLatest, all } from "redux-saga/effects";
 import { productsTable } from "@/services/dexie/tables/products";
 import {
   fetchProductsRequest,
@@ -8,7 +8,7 @@ import {
   deleteProductRequest,
   productSuccess,
   productFailure,
-} from "./inventorySlice";
+} from "@/features/inventory/store/inventorySlice";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type {
   Product,
@@ -18,8 +18,8 @@ import type {
 
 function* handleFetchProducts() {
   try {
-    const products: Product[] | undefined = yield call(productsTable.getAll);
-    yield put(fetchProductsSuccess((products ?? []).filter((p) => p.isActive)));
+    const products: Product[] = yield call(productsTable.getAll);
+    yield put(fetchProductsSuccess(products));
   } catch (err) {
     yield put(productFailure(String(err)));
   }
@@ -27,14 +27,14 @@ function* handleFetchProducts() {
 
 function* handleCreateProduct(action: PayloadAction<CreateProductPayload>) {
   try {
-    const product: Product = {
-      id: crypto.randomUUID(),
+    const newProduct: Product = {
       ...action.payload,
+      id: crypto.randomUUID(),
       isActive: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-    };
-    yield call(productsTable.create, product);
+    } as Product;
+    yield call(productsTable.create, newProduct);
     yield put(productSuccess());
     yield put(fetchProductsRequest());
   } catch (err) {
@@ -64,8 +64,10 @@ function* handleDeleteProduct(action: PayloadAction<string>) {
 }
 
 export default function* inventorySaga() {
-  yield takeLatest(fetchProductsRequest.type, handleFetchProducts);
-  yield takeLatest(createProductRequest.type, handleCreateProduct);
-  yield takeLatest(updateProductRequest.type, handleUpdateProduct);
-  yield takeLatest(deleteProductRequest.type, handleDeleteProduct);
+  yield all([
+    takeLatest(fetchProductsRequest.type, handleFetchProducts),
+    takeLatest(createProductRequest.type, handleCreateProduct),
+    takeLatest(updateProductRequest.type, handleUpdateProduct),
+    takeLatest(deleteProductRequest.type, handleDeleteProduct),
+  ]);
 }

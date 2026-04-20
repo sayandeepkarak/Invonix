@@ -4,32 +4,51 @@ import type {
   DeliveryAgent,
   AgentStatus,
 } from "@/features/orders/types/agents";
-
-const TABLE_NAME = "agents";
+import { ordersTable } from "@/services/dexie/tables/orders";
+import { DB_TABLES } from "@/services/dexie/const";
 
 export const agentsTable = {
-  getAll: () =>
+  getAll: (): Promise<DeliveryAgent[] | undefined> =>
     manageAsyncOperation(async () => {
-      return await db.table(TABLE_NAME).toArray();
+      const agents = await db.table(DB_TABLES.AGENTS).toArray();
+      return await Promise.all(
+        agents.map(async (agent: DeliveryAgent) => {
+          if (agent.orderId) {
+            const order: any = await ordersTable.getById(agent.orderId);
+            return { ...agent, order };
+          }
+          return agent;
+        }),
+      );
     }),
 
-  getById: (id: string) =>
+  getById: (id: string): Promise<DeliveryAgent | undefined> =>
     manageAsyncOperation(async () => {
-      return await db.table(TABLE_NAME).get(id);
+      const agent = await db.table(DB_TABLES.AGENTS).get(id);
+      if (agent?.orderId) {
+        const order: any = await ordersTable.getById(agent.orderId);
+        return { ...agent, order };
+      }
+      return agent;
     }),
 
-  create: (agent: DeliveryAgent) =>
+  create: (agent: DeliveryAgent): Promise<any> =>
     manageAsyncOperation(async () => {
-      return await db.table(TABLE_NAME).add(agent);
+      return await db.table(DB_TABLES.AGENTS).add(agent);
     }),
 
-  updateStatus: (id: string, status: AgentStatus) =>
+  update: (id: string, updates: Partial<DeliveryAgent>): Promise<any> =>
     manageAsyncOperation(async () => {
-      return await db.table(TABLE_NAME).update(id, { status });
+      return await db.table(DB_TABLES.AGENTS).update(id, updates);
     }),
 
-  delete: (id: string) =>
+  updateStatus: (id: string, status: AgentStatus): Promise<any> =>
     manageAsyncOperation(async () => {
-      return await db.table(TABLE_NAME).delete(id);
+      return await db.table(DB_TABLES.AGENTS).update(id, { status });
+    }),
+
+  delete: (id: string): Promise<any> =>
+    manageAsyncOperation(async () => {
+      return await db.table(DB_TABLES.AGENTS).delete(id);
     }),
 };

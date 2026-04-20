@@ -1,13 +1,12 @@
 import { db } from "@/services/dexie/connection";
 import { manageAsyncOperation } from "@/lib/utils";
 import type { Product } from "@/features/inventory/types";
-
-const TABLE_NAME = "products";
+import { DB_TABLES } from "@/services/dexie/const";
 
 function getAll(): Promise<Product[] | undefined> {
   return manageAsyncOperation<Product[]>(
     async () => {
-      return await db.table(TABLE_NAME).toArray();
+      return await db.table(DB_TABLES.PRODUCTS).toArray();
     },
     () => {
       return [];
@@ -17,13 +16,13 @@ function getAll(): Promise<Product[] | undefined> {
 
 function getById(id: string): Promise<Product | undefined> {
   return manageAsyncOperation(async () => {
-    return await db.table(TABLE_NAME).get(id);
+    return await db.table(DB_TABLES.PRODUCTS).get(id);
   });
 }
 
 function create(product: Product): Promise<void | undefined> {
   return manageAsyncOperation<void>(async () => {
-    await db.table(TABLE_NAME).add(product);
+    await db.table(DB_TABLES.PRODUCTS).add(product);
   });
 }
 
@@ -33,7 +32,7 @@ function update(
 ): Promise<void | undefined> {
   return manageAsyncOperation<void>(async () => {
     await db
-      .table(TABLE_NAME)
+      .table(DB_TABLES.PRODUCTS)
       .update(id, { ...changes, updatedAt: new Date().toISOString() });
   });
 }
@@ -41,7 +40,7 @@ function update(
 function softDelete(id: string): Promise<void | undefined> {
   return manageAsyncOperation<void>(async () => {
     await db
-      .table(TABLE_NAME)
+      .table(DB_TABLES.PRODUCTS)
       .update(id, { isActive: false, updatedAt: new Date().toISOString() });
   });
 }

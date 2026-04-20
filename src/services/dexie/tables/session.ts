@@ -1,25 +1,24 @@
 import { db } from "@/services/dexie/connection";
 import { manageAsyncOperation } from "@/lib/utils";
 import type { Session } from "@/features/auth/types";
-
-const TABLE_NAME: string = "sessions";
+import { DB_TABLES } from "@/services/dexie/const";
 
 function createSession(session: Session): Promise<void | undefined> {
   return manageAsyncOperation<void>(async () => {
-    await db.table(TABLE_NAME).clear();
-    await db.table(TABLE_NAME).add(session);
+    await db.table(DB_TABLES.SESSIONS).clear();
+    await db.table(DB_TABLES.SESSIONS).add(session);
   });
 }
 
 function getActiveSession(): Promise<Session | undefined> {
   return manageAsyncOperation<Session>(async () => {
-    return await db.table(TABLE_NAME).toCollection().first();
+    return await db.table(DB_TABLES.SESSIONS).toCollection().first();
   });
 }
 
 function clearSessions(): Promise<void | undefined> {
   return manageAsyncOperation<void>(async () => {
-    await db.table(TABLE_NAME).clear();
+    await db.table(DB_TABLES.SESSIONS).clear();
   });
 }
 

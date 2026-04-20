@@ -12,7 +12,6 @@ interface CombinedOrderState extends OrderState {
 const initialState: CombinedOrderState = {
   orders: [],
   agents: [],
-  selectedOrder: null,
   isLoading: false,
   error: null,
 };
@@ -23,19 +22,18 @@ const orderSlice = createSlice({
   reducers: {
     setOrders: (state, action: PayloadAction<Order[]>) => {
       state.orders = action.payload;
+      state.isLoading = false;
     },
-    setSelectedOrder: (state, action: PayloadAction<Order | null>) => {
-      state.selectedOrder = action.payload;
+    setAgents: (state, action: PayloadAction<DeliveryAgent[]>) => {
+      state.agents = action.payload;
+      state.isLoading = false;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
-    },
-
-    setAgents: (state, action: PayloadAction<DeliveryAgent[]>) => {
-      state.agents = action.payload;
+      state.isLoading = false;
     },
 
     fetchOrdersRequest: (state) => {
@@ -44,29 +42,38 @@ const orderSlice = createSlice({
     fetchAgentsRequest: (state) => {
       state.isLoading = true;
     },
+    createOrderRequest: (state, _action: PayloadAction<Order>) => {
+      state.isLoading = true;
+    },
     updateOrderStatusRequest: (
-      _state,
+      state,
       _action: PayloadAction<{ orderId: string; status: OrderStatus }>,
-    ) => {},
+    ) => {
+      state.isLoading = true;
+    },
     assignOrderRequest: (
-      _state,
+      state,
       _action: PayloadAction<{ orderId: string; agentId: string }>,
-    ) => {},
+    ) => {
+      state.isLoading = true;
+    },
     updateAgentStatusRequest: (
-      _state,
+      state,
       _action: PayloadAction<{ agentId: string; status: AgentStatus }>,
-    ) => {},
+    ) => {
+      state.isLoading = true;
+    },
   },
 });
 
 export const {
   setOrders,
-  setSelectedOrder,
+  setAgents,
   setLoading,
   setError,
-  setAgents,
   fetchOrdersRequest,
   fetchAgentsRequest,
+  createOrderRequest,
   updateOrderStatusRequest,
   assignOrderRequest,
   updateAgentStatusRequest,

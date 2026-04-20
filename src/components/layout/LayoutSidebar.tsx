@@ -1,11 +1,11 @@
 "use client";
+
 import * as React from "react";
 import {
   LayoutDashboard,
   LogOut,
   Package,
   Settings,
-  User,
   ShoppingCart,
   Truck,
 } from "lucide-react";
@@ -33,20 +33,30 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logoutRequest } from "@/features/auth/store";
 
+const navItems = [
+  { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { title: "Inventory", href: "/dashboard/inventory", icon: Package },
+  { title: "Orders", href: "/dashboard/orders", icon: ShoppingCart },
+  { title: "Delivery Agents", href: "/dashboard/agents", icon: Truck },
+];
+
 export function LayoutSidebar() {
   const pathname = usePathname();
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
+
   const handleLogout = () => {
     dispatch(logoutRequest());
   };
+
   const initials = user?.name
     ? user.name
         .split(" ")
-        .map((n) => n[0])
+        .map((n: string) => n[0])
         .join("")
         .toUpperCase()
     : "U";
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="flex h-12 items-center px-4">
@@ -55,70 +65,24 @@ export function LayoutSidebar() {
             <LayoutDashboard className="h-4 w-4" />
           </div>
           <span className="truncate group-data-[collapsible=icon]:hidden">
-            Invonix
+            {user?.businessName || "Invonix"}
           </span>
         </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarMenu className="px-2">
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              render={(props: any) => <Link {...props} href="/dashboard" />}
-              isActive={pathname === "/dashboard"}
-              tooltip="Dashboard"
-            >
-              <LayoutDashboard />
-              <span>Dashboard</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              render={(props: any) => (
-                <Link {...props} href="/dashboard/inventory" />
-              )}
-              isActive={pathname === "/dashboard/inventory"}
-              tooltip="Inventory"
-            >
-              <Package />
-              <span>Inventory</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              render={(props: any) => (
-                <Link {...props} href="/dashboard/orders" />
-              )}
-              isActive={pathname === "/dashboard/orders"}
-              tooltip="Orders"
-            >
-              <ShoppingCart />
-              <span>Orders</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              render={(props: any) => (
-                <Link {...props} href="/dashboard/agents" />
-              )}
-              isActive={pathname === "/dashboard/agents"}
-              tooltip="Delivery Agents"
-            >
-              <Truck />
-              <span>Delivery Agents</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              render={(props: any) => (
-                <Link {...props} href="/dashboard/settings" />
-              )}
-              isActive={pathname === "/dashboard/settings"}
-              tooltip="Settings"
-            >
-              <Settings />
-              <span>Settings</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          {navItems.map((item) => (
+            <SidebarMenuItem key={item.href}>
+              <SidebarMenuButton
+                render={(props: any) => <Link {...props} href={item.href} />}
+                isActive={pathname === item.href}
+                tooltip={item.title}
+              >
+                <item.icon />
+                <span>{item.title}</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
@@ -155,15 +119,6 @@ export function LayoutSidebar() {
                 sideOffset={4}
               >
                 <DropdownMenuGroup>
-                  <DropdownMenuItem className="p-0">
-                    <Link
-                      href="/dashboard/settings"
-                      className="flex items-center gap-2 w-full px-1.5 py-1"
-                    >
-                      <User className="h-4 w-4" />
-                      Account
-                    </Link>
-                  </DropdownMenuItem>
                   <DropdownMenuItem className="p-0">
                     <Link
                       href="/dashboard/settings"

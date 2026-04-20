@@ -1,54 +1,55 @@
-import { put, takeLatest, select } from "redux-saga/effects";
+import { all, call, put, takeLatest } from "redux-saga/effects";
+import { ordersTable } from "@/services/dexie/tables/orders";
+import { productsTable } from "@/services/dexie/tables/products";
 import {
-  fetchAnalyticsRequest,
   setAnalyticsData,
   setLoading,
-} from "./dashboardSlice";
-import { Order, OrderStatus } from "@/features/orders/types";
-import { ORDER_STATUS_LABELS } from "@/features/orders/const";
-
-const selectOrders = (state: any) => state.orders.orders;
+  fetchAnalyticsRequest,
+} from "@/features/dashboard/store/dashboardSlice";
+import { ORDER_STATUS, ORDER_STATUS_LABELS } from "@/features/orders/const";
 
 function* handleFetchAnalytics() {
   try {
-    const orders: Order[] = yield select(selectOrders);
+    const orders: any[] = yield call(ordersTable.getAll);
+    const products: any[] = yield call(productsTable.getAll);
 
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
-    const revenueData = months.map((month) => ({
-      month,
-      amount: Math.floor(Math.random() * 5000) + 2000,
-    }));
+    const revenueData = [
+      { month: "Jan", amount: 2400 },
+      { month: "Feb", amount: 1398 },
+      { month: "Mar", amount: 9800 },
+      { month: "Apr", amount: 3908 },
+      { month: "May", amount: 4800 },
+      { month: "Jun", amount: 3800 },
+    ];
 
-    const statusCounts: Record<string, number> = {};
-    orders.forEach((order) => {
-      statusCounts[order.status] = (statusCounts[order.status] || 0) + 1;
-    });
+    const statusCounts = orders.reduce((acc: any, order: any) => {
+      acc[order.status] = (acc[order.status] || 0) + 1;
+      return acc;
+    }, {});
 
-    const statusDistribution = Object.entries(statusCounts).map(
-      ([status, count]) => ({
-        status: ORDER_STATUS_LABELS[status as OrderStatus] || status,
-        count,
+    const statusDistribution = Object.entries(ORDER_STATUS).map(
+      ([key, value]) => ({
+        status: ORDER_STATUS_LABELS[value],
+        count: statusCounts[value] || 0,
       }),
     );
+
+    const topProducts = products
+      .slice(0, 4)
+      .map((p) => ({ name: p.name, sales: 50, revenue: p.price * 50 }));
 
     const recentActivity = [
       {
         id: "1",
         type: "order",
-        message: "New order #1234 from John Doe",
-        timestamp: "5 mins ago",
+        message: "New order #ORD-001 placed",
+        timestamp: "2 minutes ago",
       },
       {
         id: "2",
-        type: "system",
-        message: "Low stock alert: Product X",
-        timestamp: "1 hour ago",
-      },
-      {
-        id: "3",
         type: "delivery",
-        message: "Order #1232 delivered",
-        timestamp: "2 hours ago",
+        message: "Order #ORD-002 out for delivery",
+        timestamp: "1 hour ago",
       },
     ];
 
@@ -56,16 +57,17 @@ function* handleFetchAnalytics() {
       setAnalyticsData({
         revenueData,
         statusDistribution,
+        topProducts,
         recentActivity,
       }),
     );
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
   } finally {
     yield put(setLoading(false));
   }
 }
 
-export function* dashboardSaga() {
-  yield takeLatest(fetchAnalyticsRequest.type, handleFetchAnalytics);
+export default function* dashboardSaga() {
+  yield all([takeLatest(fetchAnalyticsRequest.type, handleFetchAnalytics)]);
 }

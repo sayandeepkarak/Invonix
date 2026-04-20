@@ -4,31 +4,46 @@ import { useEffect, useState, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   fetchOrdersRequest,
+  fetchAgentsRequest,
   updateOrderStatusRequest,
+  assignOrderRequest,
 } from "@/features/orders/store/orderSlice";
 import { OrderTable } from "@/features/orders/components/OrderTable";
 import { OrderFilters } from "@/features/orders/components/OrderFilters";
 import { LayoutApp } from "@/components/layout/LayoutApp";
 import { PageHeader } from "@/components/PageHeader";
+import { AppButton } from "@/components/wrapper";
 import type { Order, OrderStatus } from "@/features/orders/types";
-import { ORDER_STATUS, type OrderStatusFilter } from "@/features/orders/const";
+import { type OrderStatusFilter } from "@/features/orders/const";
+import { useOrderGenerator } from "@/features/orders/hooks/useOrderGenerator";
+import { AgentAssignDialog } from "@/features/orders/components/AgentAssignDialog";
 
 export default function OrdersPage() {
   const dispatch = useAppDispatch();
-  const { orders } = useAppSelector((state) => state.orders);
+  const { orders, agents, isLoading } = useAppSelector((state) => state.orders);
+  const { generateRandomOrder } = useOrderGenerator();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<OrderStatusFilter>("ALL");
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchOrdersRequest());
+    dispatch(fetchAgentsRequest());
   }, [dispatch]);
 
   const filteredOrders = useMemo(() => {
     return orders.filter((order) => {
+      const searchStr = searchQuery.toLowerCase();
+      const userName = order.user?.name?.toLowerCase() || "";
+      const userEmail = order.user?.email?.toLowerCase() || "";
+      const orderId = order.id.toLowerCase();
+
       const matchesSearch =
-        order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        order.id.toLowerCase().includes(searchQuery.toLowerCase());
+        userName.includes(searchStr) ||
+        userEmail.includes(searchStr) ||
+        orderId.includes(searchStr);
 
       const matchesStatus =
         statusFilter === "ALL" || order.status === statusFilter;
@@ -37,40 +52,36 @@ export default function OrdersPage() {
     });
   }, [orders, searchQuery, statusFilter]);
 
-  const handleView = (order: Order) => {
-    console.log("View order", order);
+  const handleUpdateStatus = (orderId: string, status: OrderStatus) => {
+    dispatch(updateOrderStatusRequest({ orderId, status }));
   };
 
-  const handleUpdateStatus = (order: Order) => {
-    const statuses: OrderStatus[] = [
-      ORDER_STATUS.PENDING,
-      ORDER_STATUS.CONFIRMED,
-      ORDER_STATUS.PREPARING,
-      ORDER_STATUS.OUT_FOR_DELIVERY,
-      ORDER_STATUS.DELIVERED,
-    ];
-    const currentIndex = statuses.indexOf(order.status);
-    if (currentIndex !== -1 && currentIndex < statuses.length - 1) {
-      const nextStatus = statuses[currentIndex + 1];
-      if (nextStatus) {
-        dispatch(
-          updateOrderStatusRequest({ orderId: order.id, status: nextStatus }),
-        );
-      }
+  const handleAssignClick = (order: Order) => {
+    setSelectedOrder(order);
+    setIsAssignDialogOpen(true);
+  };
+
+  const handleAssignAgent = (agentId: string) => {
+    if (selectedOrder) {
+      dispatch(assignOrderRequest({ orderId: selectedOrder.id, agentId }));
+      setIsAssignDialogOpen(false);
+      setSelectedOrder(null);
     }
-  };
-
-  const handleAssign = (order: Order) => {
-    console.log("Assign order", order);
   };
 
   return (
     <LayoutApp>
       <div className="space-y-6">
-        <PageHeader
-          title="Orders"
-          subtitle="Manage customer orders and delivery updates."
-        />
+        <div className="flex justify-between items-end">
+          <PageHeader
+            title="Orders"
+            subtitle="Manage customer orders and delivery updates."
+            className="mb-0"
+          />
+          <AppButton onClick={generateRandomOrder} loading={isLoading}>
+            Generate Order
+          </AppButton>
+        </div>
 
         <OrderFilters
           searchQuery={searchQuery}
@@ -81,11 +92,18 @@ export default function OrdersPage() {
 
         <OrderTable
           orders={filteredOrders}
-          onView={handleView}
           onUpdateStatus={handleUpdateStatus}
-          onAssign={handleAssign}
+          onAssign={handleAssignClick}
         />
       </div>
+
+      <AgentAssignDialog
+        open={isAssignDialogOpen}
+        onClose={() => setIsAssignDialogOpen(false)}
+        agents={agents}
+        onAssign={handleAssignAgent}
+        isLoading={isLoading}
+      />
     </LayoutApp>
   );
 }

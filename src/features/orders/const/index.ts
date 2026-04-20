@@ -1,5 +1,5 @@
-import { OrderStatus } from "../types";
-import { AgentStatus } from "../types/agents";
+import { OrderStatus } from "@/features/orders/types";
+import { AgentStatus } from "@/features/orders/types/agents";
 
 export const ORDER_STATUS = Object.freeze({
   PENDING: "PENDING",
@@ -29,7 +29,6 @@ export const ORDER_STATUS_OPTIONS = [
 
 export type OrderStatusFilter = OrderStatus | "ALL";
 
-// Agent Statuses
 export const AGENT_STATUS = Object.freeze({
   AVAILABLE: "AVAILABLE",
   BUSY: "BUSY",
