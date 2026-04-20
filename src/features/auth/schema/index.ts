@@ -1,9 +1,11 @@
 import { z } from "zod";
+
 export const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   rememberMe: z.boolean().default(false),
 });
+
 export const signupStepOneSchema = z
   .object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -20,6 +22,7 @@ export const signupStepOneSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
 export const signupStepThreeSchema = z.object({
   businessName: z.string().min(2, "Business name is required"),
   businessType: z.string().min(1, "Business type is required"),

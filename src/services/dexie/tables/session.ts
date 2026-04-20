@@ -1,18 +1,29 @@
-import { db } from "@/services/dexie/connection"
-import type { Session } from "@/features/auth/types"
-const TABLE_NAME: string = "sessions"
-async function createSession(session: Session): Promise<void> {
-  await db.table(TABLE_NAME).clear()
-  await db.table(TABLE_NAME).add(session)
+import { db } from "@/services/dexie/connection";
+import { manageAsyncOperation } from "@/lib/utils";
+import type { Session } from "@/features/auth/types";
+import { DB_TABLES } from "@/services/dexie/const";
+
+function createSession(session: Session): Promise<void | undefined> {
+  return manageAsyncOperation<void>(async () => {
+    await db.table(DB_TABLES.SESSIONS).clear();
+    await db.table(DB_TABLES.SESSIONS).add(session);
+  });
 }
-async function getActiveSession(): Promise<Session | undefined> {
-  return db.table(TABLE_NAME).toCollection().first()
+
+function getActiveSession(): Promise<Session | undefined> {
+  return manageAsyncOperation<Session>(async () => {
+    return await db.table(DB_TABLES.SESSIONS).toCollection().first();
+  });
 }
-async function clearSessions(): Promise<void> {
-  await db.table(TABLE_NAME).clear()
+
+function clearSessions(): Promise<void | undefined> {
+  return manageAsyncOperation<void>(async () => {
+    await db.table(DB_TABLES.SESSIONS).clear();
+  });
 }
+
 export const sessionsTable = {
   createSession,
   getActiveSession,
   clearSessions,
-}
+};

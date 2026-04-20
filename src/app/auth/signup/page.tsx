@@ -1,5 +1,5 @@
-"use client"
-import { SignupForm } from "@/features/auth/components"
+"use client";
+import { AuthSignupForm } from "@/features/auth/components";
 export default function SignupPage() {
-  return <SignupForm />
+  return <AuthSignupForm />;
 }
