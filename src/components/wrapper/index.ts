@@ -5,3 +5,5 @@ export * from "./AppInput";
 export * from "./AppPasswordInput";
 export * from "./AppSelect";
 export * from "./AppStepper";
+export * from "./AppTextarea";
+export * from "./AppDialog";

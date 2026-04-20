@@ -1,20 +1,22 @@
 "use client";
-import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
-import { AppSidebar } from "@/components/layout/AppSidebar";
+import { LayoutProtectedRoute } from "@/components/layout/LayoutProtectedRoute";
+import { LayoutSidebar } from "@/components/layout/LayoutSidebar";
 import {
   SidebarProvider,
   SidebarInset,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-interface AppLayoutProps {
+
+interface LayoutAppProps {
   children: React.ReactNode;
 }
-export function AppLayout({ children }: AppLayoutProps) {
+
+export function LayoutApp({ children }: LayoutAppProps) {
   return (
-    <ProtectedRoute>
+    <LayoutProtectedRoute>
       <SidebarProvider>
         <div className="flex min-h-screen bg-background w-full">
-          <AppSidebar />
+          <LayoutSidebar />
           <SidebarInset>
             <header className="flex h-16 shrink-0 items-center gap-2 border-b px-6 sticky top-0 bg-background/95 backdrop-blur z-10">
               <SidebarTrigger className="-ml-1" />
@@ -25,6 +27,6 @@ export function AppLayout({ children }: AppLayoutProps) {
           </SidebarInset>
         </div>
       </SidebarProvider>
-    </ProtectedRoute>
+    </LayoutProtectedRoute>
   );
 }

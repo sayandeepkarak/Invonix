@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Select,
   SelectContent,
@@ -8,10 +9,12 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+
 interface SelectOption {
   label: string;
   value: string;
 }
+
 interface AppSelectProps {
   label?: string;
   options: Readonly<Array<SelectOption>>;
@@ -22,10 +25,12 @@ interface AppSelectProps {
   value?: string;
   onChange?: (value: string) => void;
   disabled?: boolean;
+  defaultValue?: string;
   ref?: React.Ref<HTMLButtonElement>;
 }
+
 export function AppSelect({
-  label = "Select Label",
+  label,
   options = [],
   error = "",
   placeholder = "Select an option",
@@ -34,13 +39,15 @@ export function AppSelect({
   value,
   onChange,
   disabled,
+  defaultValue,
   ref,
 }: AppSelectProps) {
   return (
     <div className="grid w-full items-center gap-1.5">
-      <Label htmlFor={id}>{label}</Label>
+      {label && <Label htmlFor={id}>{label}</Label>}
       <Select
         value={value}
+        defaultValue={defaultValue}
         onValueChange={(val) => onChange?.(val || "")}
         disabled={disabled}
       >

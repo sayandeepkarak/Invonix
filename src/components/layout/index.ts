@@ -1,4 +1,4 @@
-export { StoreProvider } from "@/components/layout/StoreProvider"
-export { ProtectedRoute } from "@/components/layout/ProtectedRoute"
-export { AppLayout } from "@/components/layout/AppLayout"
-export { AppSidebar } from "@/components/layout/AppSidebar"
+export { StoreProvider } from "./StoreProvider";
+export { LayoutProtectedRoute } from "./LayoutProtectedRoute";
+export { LayoutApp } from "./LayoutApp";
+export { LayoutSidebar } from "./LayoutSidebar";

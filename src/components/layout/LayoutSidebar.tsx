@@ -1,6 +1,14 @@
 "use client";
 import * as React from "react";
-import { LayoutDashboard, LogOut, Package, Settings, User } from "lucide-react";
+import {
+  LayoutDashboard,
+  LogOut,
+  Package,
+  Settings,
+  User,
+  ShoppingCart,
+  Truck,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -24,7 +32,8 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logoutRequest } from "@/features/auth/store";
-export function AppSidebar() {
+
+export function LayoutSidebar() {
   const pathname = usePathname();
   const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
@@ -74,6 +83,42 @@ export function AppSidebar() {
               <span>Inventory</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              render={(props: any) => (
+                <Link {...props} href="/dashboard/orders" />
+              )}
+              isActive={pathname === "/dashboard/orders"}
+              tooltip="Orders"
+            >
+              <ShoppingCart />
+              <span>Orders</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              render={(props: any) => (
+                <Link {...props} href="/dashboard/agents" />
+              )}
+              isActive={pathname === "/dashboard/agents"}
+              tooltip="Delivery Agents"
+            >
+              <Truck />
+              <span>Delivery Agents</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              render={(props: any) => (
+                <Link {...props} href="/dashboard/settings" />
+              )}
+              isActive={pathname === "/dashboard/settings"}
+              tooltip="Settings"
+            >
+              <Settings />
+              <span>Settings</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
@@ -110,13 +155,23 @@ export function AppSidebar() {
                 sideOffset={4}
               >
                 <DropdownMenuGroup>
-                  <DropdownMenuItem className="gap-2">
-                    <User className="h-4 w-4" />
-                    Account
+                  <DropdownMenuItem className="p-0">
+                    <Link
+                      href="/dashboard/settings"
+                      className="flex items-center gap-2 w-full px-1.5 py-1"
+                    >
+                      <User className="h-4 w-4" />
+                      Account
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2">
-                    <Settings className="h-4 w-4" />
-                    Settings
+                  <DropdownMenuItem className="p-0">
+                    <Link
+                      href="/dashboard/settings"
+                      className="flex items-center gap-2 w-full px-1.5 py-1"
+                    >
+                      <Settings className="h-4 w-4" />
+                      Settings
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />

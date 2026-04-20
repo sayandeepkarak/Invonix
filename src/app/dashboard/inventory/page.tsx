@@ -11,14 +11,15 @@ import {
   closeDialog,
 } from "@/features/inventory/store";
 import {
-  ProductToolbar,
-  ProductTable,
-  ProductDialog,
-  DeleteConfirmDialog,
+  InventoryToolbar,
+  InventoryTable,
+  InventoryDialog,
+  InventoryDeleteDialog,
 } from "@/features/inventory/components";
-import { AppLayout } from "@/components/layout/AppLayout";
+import { LayoutApp } from "@/components/layout/LayoutApp";
+import { PageHeader } from "@/components/PageHeader";
 import type { Product } from "@/features/inventory/types";
-import type { ProductFormValues } from "@/features/inventory/schema";
+import type { InventoryFormValues } from "@/features/inventory/schema";
 
 export default function InventoryPage() {
   const dispatch = useAppDispatch();
@@ -55,7 +56,7 @@ export default function InventoryPage() {
     setDeleteTarget(null);
   }
 
-  function handleDialogSubmit(data: ProductFormValues) {
+  function handleDialogSubmit(data: InventoryFormValues) {
     const tags = data.tags
       ? data.tags
           .split(",")
@@ -84,28 +85,26 @@ export default function InventoryPage() {
   }
 
   return (
-    <AppLayout>
+    <LayoutApp>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Inventory</h1>
-          <p className="text-muted-foreground">
-            Manage your products and stock levels.
-          </p>
-        </div>
+        <PageHeader
+          title="Inventory"
+          subtitle="Manage your products and stock levels."
+        />
 
-        <ProductToolbar
+        <InventoryToolbar
           onSearch={handleSearch}
           onAddProduct={handleAddProduct}
         />
 
-        <ProductTable
+        <InventoryTable
           products={products}
           searchQuery={searchQuery}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
 
-        <ProductDialog
+        <InventoryDialog
           open={isDialogOpen}
           isEdit={isEditMode}
           product={selectedProduct}
@@ -114,7 +113,7 @@ export default function InventoryPage() {
           onSubmit={handleDialogSubmit}
         />
 
-        <DeleteConfirmDialog
+        <InventoryDeleteDialog
           open={!!deleteTarget}
           productName={deleteTarget?.name ?? ""}
           isLoading={isLoading}
@@ -122,6 +121,6 @@ export default function InventoryPage() {
           onConfirm={handleConfirmDelete}
         />
       </div>
-    </AppLayout>
+    </LayoutApp>
   );
 }

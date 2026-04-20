@@ -5,11 +5,11 @@ import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { signupRequest } from "@/features/auth/store";
 import { SIGNUP_STEPS, SIGNUP_STEP_LABELS } from "@/features/auth/const";
-import { AppCard, AppStepper } from "@/components/common";
-import { SignupStepOne } from "./SignupStepOne";
-import { SignupStepTwo } from "./SignupStepTwo";
-import { SignupStepThree } from "./SignupStepThree";
-import { SignupStepFour } from "./SignupStepFour";
+import { AppCard, AppStepper } from "@/components/wrapper";
+import { AuthSignupStepOne } from "@/features/auth/components/signup/AuthSignupStepOne";
+import { AuthSignupStepTwo } from "@/features/auth/components/signup/AuthSignupStepTwo";
+import { AuthSignupStepThree } from "@/features/auth/components/signup/AuthSignupStepThree";
+import { AuthSignupStepFour } from "@/features/auth/components/signup/AuthSignupStepFour";
 import type {
   StepKey,
   StepOneData,
@@ -23,7 +23,7 @@ const STEP_ORDER: StepKey[] = [
   SIGNUP_STEPS.COMPLETE,
 ];
 
-export function SignupForm(): React.JSX.Element {
+export function AuthSignupForm(): React.JSX.Element {
   const dispatch = useAppDispatch();
   const { error, isAuthenticated } = useAppSelector((state) => state.auth);
 
@@ -83,14 +83,14 @@ export function SignupForm(): React.JSX.Element {
       )}
 
       {currentStep === SIGNUP_STEPS.BASIC_INFO && (
-        <SignupStepOne
+        <AuthSignupStepOne
           onNext={handleStepOneComplete}
           initialData={stepOneData}
         />
       )}
 
       {currentStep === SIGNUP_STEPS.EMAIL_VERIFICATION && (
-        <SignupStepTwo
+        <AuthSignupStepTwo
           email={stepOneData.email}
           onNext={handleEmailVerified}
           onBack={handleBackToBasic}
@@ -98,14 +98,14 @@ export function SignupForm(): React.JSX.Element {
       )}
 
       {currentStep === SIGNUP_STEPS.BUSINESS_DETAILS && (
-        <SignupStepThree
+        <AuthSignupStepThree
           onNext={handleStepThreeComplete}
           onBack={handleBackToEmail}
         />
       )}
 
       {currentStep === SIGNUP_STEPS.COMPLETE && (
-        <SignupStepFour userName={stepOneData.name} />
+        <AuthSignupStepFour userName={stepOneData.name} />
       )}
 
       {currentStep !== SIGNUP_STEPS.COMPLETE && (

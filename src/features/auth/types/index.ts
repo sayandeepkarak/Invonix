@@ -83,3 +83,7 @@ export interface SignupStepThreeProps {
   onBack: () => void;
   initialData?: StepThreeData;
 }
+
+export interface SignupStepFourProps {
+  userName: string;
+}

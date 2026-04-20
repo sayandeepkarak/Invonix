@@ -9,7 +9,7 @@ export interface Product {
   stock: number;
   lowStockThreshold: number;
   images: string[];
-  description: string;
+  description?: string;
   tags: string[];
   isActive: boolean;
   createdAt: string;

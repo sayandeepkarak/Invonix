@@ -119,7 +119,6 @@ function* handleAutoLogin() {
     if (user && (session.rememberMe || isSessionActive)) {
       yield put(authSuccess(user));
     } else {
-      // Session expired or should not persist
       yield call(sessionsTable.clearSessions);
       sessionStorage.removeItem(SESSION_STORAGE_KEY);
       yield put(logoutSuccess());
