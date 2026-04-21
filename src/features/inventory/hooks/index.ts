@@ -1,2 +1,2 @@
-export * from "./useInventory";
-export * from "./useInventoryForm";
+export * from "@/features/inventory/hooks/useInventory";
+export * from "@/features/inventory/hooks/useInventoryForm";

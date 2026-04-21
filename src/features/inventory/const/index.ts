@@ -1,3 +1,9 @@
+export const INVENTORY_STEPS = Object.freeze({
+  BASIC_INFO: "BASIC_INFO",
+  PRICING_STOCK: "PRICING_STOCK",
+  TAGS: "TAGS",
+});
+
 export const INVENTORY_CATEGORY = Object.freeze({
   ELECTRONICS: "Electronics",
   CLOTHING: "Clothing",

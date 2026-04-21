@@ -17,7 +17,6 @@ export default function InventoryPage() {
     isLoading,
     isDialogOpen,
     isEditMode,
-    searchQuery,
     setSearchQuery,
     debouncedSearchQuery,
     deleteTarget,

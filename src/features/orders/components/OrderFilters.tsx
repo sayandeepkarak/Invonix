@@ -3,7 +3,7 @@
 import { ChangeEvent } from "react";
 import { AppInput, AppSelect } from "@/components/wrapper";
 import { Search } from "lucide-react";
-import type { OrderStatus } from "@/features/orders/types";
+
 import {
   ORDER_STATUS_OPTIONS,
   type OrderStatusFilter,

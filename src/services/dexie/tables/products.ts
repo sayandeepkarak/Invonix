@@ -52,15 +52,6 @@ export const productsTable = {
   },
 
   softDelete: (id: string): Promise<void> => {
-    return manageAsyncOperation(
-      async () => {
-        await db
-          .table(DB_TABLES.PRODUCTS)
-          .update(id, { isActive: false, updatedAt: new Date().toISOString() });
-      },
-      () => {
-        return undefined;
-      },
-    );
+    return productsTable.update(id, { isActive: false });
   },
 };

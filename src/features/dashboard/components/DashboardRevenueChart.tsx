@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { AppCard } from "@/components/wrapper";
-import { DashboardChartTooltip } from "./DashboardChartTooltip";
+import { DashboardChartTooltip } from "@/features/dashboard/components/DashboardChartTooltip";
 
 interface DashboardRevenueChartProps {
   data: { month: string; amount: number }[];

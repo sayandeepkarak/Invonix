@@ -7,6 +7,7 @@ import {
   AppInput,
   AppPasswordInput,
   AppCard,
+  AppCheckbox,
 } from "@/components/wrapper";
 
 export function AuthSignInForm() {
@@ -51,6 +52,12 @@ export function AuthSignInForm() {
             error={errors.password?.message}
           />
         </div>
+
+        <AppCheckbox
+          id="rememberMe"
+          label="Remember me"
+          onCheckedChange={(checked) => form.setValue("rememberMe", !!checked)}
+        />
 
         <AppButton type="submit" className="w-full" disabled={isLoading}>
           {isLoading ? "Signing in..." : "Sign In"}

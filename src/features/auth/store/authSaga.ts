@@ -44,7 +44,11 @@ function* handleLogin(action: PayloadAction<LoginPayload>) {
     };
 
     yield call(sessionsTable.createSession, session);
-    sessionStorage.setItem(SESSION_STORAGE_KEY, "true");
+    if (action.payload.rememberMe) {
+      localStorage.setItem(SESSION_STORAGE_KEY, "true");
+    } else {
+      sessionStorage.setItem(SESSION_STORAGE_KEY, "true");
+    }
 
     yield put(authSuccess(user));
   } catch (err) {
@@ -92,6 +96,7 @@ function* handleLogout() {
   try {
     yield call(sessionsTable.clearSessions);
     sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    localStorage.removeItem(SESSION_STORAGE_KEY);
     yield put(logoutSuccess());
   } catch (err) {
     yield put(authFailure(String(err)));
@@ -110,7 +115,9 @@ function* handleAutoLogin() {
     }
 
     const isSessionActive =
-      sessionStorage.getItem(SESSION_STORAGE_KEY) === "true";
+      sessionStorage.getItem(SESSION_STORAGE_KEY) === "true" ||
+      localStorage.getItem(SESSION_STORAGE_KEY) === "true";
+
     const user: User | undefined = yield call(
       usersTable.getUserById,
       session.userId,
@@ -121,6 +128,7 @@ function* handleAutoLogin() {
     } else {
       yield call(sessionsTable.clearSessions);
       sessionStorage.removeItem(SESSION_STORAGE_KEY);
+      localStorage.removeItem(SESSION_STORAGE_KEY);
       yield put(logoutSuccess());
     }
   } catch (err) {

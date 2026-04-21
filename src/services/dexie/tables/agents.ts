@@ -5,6 +5,7 @@ import type {
   AgentStatus,
 } from "@/features/orders/types/agents";
 import { DB_TABLES } from "@/services/dexie/const";
+import { ordersTable } from "@/services/dexie/tables/orders";
 
 export const agentsTable = {
   getAll: (): Promise<DeliveryAgent[] | undefined> => {
@@ -13,8 +14,8 @@ export const agentsTable = {
         const agents = await db.table(DB_TABLES.AGENTS).toArray();
         const results = agents.map(async (agent: DeliveryAgent) => {
           if (agent.orderId) {
-            const order = await db.table(DB_TABLES.ORDERS).get(agent.orderId);
-            return { ...agent, order };
+            const order = await ordersTable.getById(agent.orderId);
+            return { ...agent, order: order || undefined };
           }
           return agent;
         });
@@ -33,8 +34,8 @@ export const agentsTable = {
         if (!agent) return null;
 
         if (agent.orderId) {
-          const order = await db.table(DB_TABLES.ORDERS).get(agent.orderId);
-          return { ...agent, order };
+          const order = await ordersTable.getById(agent.orderId);
+          return { ...agent, order: order || undefined };
         }
         return agent;
       },
@@ -67,14 +68,7 @@ export const agentsTable = {
   },
 
   updateStatus: (id: string, status: AgentStatus): Promise<void> => {
-    return manageAsyncOperation(
-      async () => {
-        await db.table(DB_TABLES.AGENTS).update(id, { status });
-      },
-      () => {
-        return undefined;
-      },
-    );
+    return agentsTable.update(id, { status });
   },
 
   delete: (id: string): Promise<void> => {

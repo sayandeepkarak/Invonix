@@ -33,15 +33,11 @@ function* handleFetchAnalytics() {
     );
 
     const statusDistribution = Object.entries(ORDER_STATUS).map(
-      ([key, value]) => ({
+      ([_, value]) => ({
         status: ORDER_STATUS_LABELS[value],
         count: statusCounts[value] || 0,
       }),
     );
-
-    const topProducts = (products || [])
-      .slice(0, 4)
-      .map((p) => ({ name: p.name, sales: 50, revenue: p.price * 50 }));
 
     const recentActivity = [
       {
@@ -62,7 +58,6 @@ function* handleFetchAnalytics() {
       setAnalyticsData({
         revenueData,
         statusDistribution,
-        topProducts,
         recentActivity,
       }),
     );

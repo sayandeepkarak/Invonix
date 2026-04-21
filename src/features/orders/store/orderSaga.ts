@@ -17,12 +17,12 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import type { OrderStatus, Order } from "@/features/orders/types";
 import type { DeliveryAgent } from "@/features/orders/types/agents";
 import type { Product } from "@/features/inventory/types";
-import { ORDER_STATUS, AGENT_STATUS } from "@/features/orders/const";
+import { AGENT_STATUS } from "@/features/orders/const";
 
 function* seedData() {
   const existingAgents: DeliveryAgent[] = yield call(agentsTable.getAll);
 
-  if ((existingAgents || []).length === 0) {
+  if (!existingAgents?.length) {
     const dummyAgents: DeliveryAgent[] = [
       {
         id: "agent-1",

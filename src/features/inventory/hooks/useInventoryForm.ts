@@ -1,19 +1,15 @@
-import { useEffect, useCallback } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useCallback, useState } from "react";
 import {
   InventoryFormValues,
-  InventorySchema,
 } from "@/features/inventory/schema";
 import type { Product } from "@/features/inventory/types";
-import { INVENTORY_CATEGORY } from "@/features/inventory/const";
+import { INVENTORY_CATEGORY, INVENTORY_STEPS } from "@/features/inventory/const";
 
 interface UseInventoryFormProps {
   open: boolean;
   isEdit: boolean;
   product: Product | null;
   onSubmit: (data: InventoryFormValues) => void;
-  onClose: () => void;
 }
 
 export function useInventoryForm({
@@ -21,31 +17,14 @@ export function useInventoryForm({
   isEdit,
   product,
   onSubmit,
-  onClose,
 }: UseInventoryFormProps) {
-  const form = useForm<InventoryFormValues>({
-    resolver: zodResolver(InventorySchema) as any,
-    defaultValues: {
-      name: "",
-      sku: "",
-      category: INVENTORY_CATEGORY.ELECTRONICS,
-      price: 0,
-      costPrice: 0,
-      salePrice: 0,
-      stock: 0,
-      lowStockThreshold: 5,
-      description: "",
-      tags: "",
-    },
-  });
-
-  const { reset, setValue, watch, handleSubmit } = form;
-  const categoryValue = watch("category");
+  const [currentStep, setCurrentStep] = useState<string>(INVENTORY_STEPS.BASIC_INFO);
+  const [formData, setFormData] = useState<Partial<InventoryFormValues>>({});
 
   useEffect(() => {
     if (open) {
       if (isEdit && product) {
-        reset({
+        setFormData({
           name: product.name,
           sku: product.sku,
           category: product.category,
@@ -58,7 +37,7 @@ export function useInventoryForm({
           tags: product.tags.join(", "),
         });
       } else {
-        reset({
+        setFormData({
           name: "",
           sku: "",
           category: INVENTORY_CATEGORY.ELECTRONICS,
@@ -71,24 +50,29 @@ export function useInventoryForm({
           tags: "",
         });
       }
+      setCurrentStep(INVENTORY_STEPS.BASIC_INFO);
     }
-  }, [open, isEdit, product, reset]);
+  }, [open, isEdit, product]);
 
-  const handleCategoryChange = useCallback(
-    (val: string) => {
-      setValue("category", val);
-    },
-    [setValue],
-  );
+  const handleNext = useCallback((stepData: Partial<InventoryFormValues>, nextStep: string) => {
+    setFormData((prev) => ({ ...prev, ...stepData }));
+    setCurrentStep(nextStep);
+  }, []);
 
-  const handleFormSubmit = handleSubmit((data) => {
-    onSubmit(data);
-  });
+  const handleBack = useCallback((prevStep: string) => {
+    setCurrentStep(prevStep);
+  }, []);
+
+  const handleFinalSubmit = useCallback((finalData: Partial<InventoryFormValues>) => {
+    const fullData = { ...formData, ...finalData } as InventoryFormValues;
+    onSubmit(fullData);
+  }, [formData, onSubmit]);
 
   return {
-    form,
-    categoryValue,
-    handleCategoryChange,
-    handleFormSubmit,
+    currentStep,
+    formData,
+    handleNext,
+    handleBack,
+    handleFinalSubmit,
   };
 }

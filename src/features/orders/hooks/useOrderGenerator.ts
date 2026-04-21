@@ -11,13 +11,13 @@ export function useOrderGenerator() {
   const { user } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    if (products.length === 0) {
+    if (!products.length) {
       dispatch(fetchProductsRequest());
     }
   }, [dispatch, products.length]);
 
   const generateRandomOrder = () => {
-    if (products.length === 0 || !user) return;
+    if (!products.length || !user) return;
 
     const randomProduct = products[Math.floor(Math.random() * products.length)];
     if (!randomProduct) return;

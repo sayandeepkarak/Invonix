@@ -9,7 +9,7 @@ import {
   Legend,
 } from "recharts";
 import { AppCard } from "@/components/wrapper";
-import { DashboardChartTooltip } from "./DashboardChartTooltip";
+import { DashboardChartTooltip } from "@/features/dashboard/components/DashboardChartTooltip";
 import { ORDER_STATUS, ORDER_STATUS_LABELS } from "@/features/orders/const";
 
 interface DashboardStatusDistributionProps {

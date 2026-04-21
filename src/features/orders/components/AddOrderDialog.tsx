@@ -50,7 +50,7 @@ export function AddOrderDialog({
             </AppButton>
             <AppButton
               onClick={handleSubmit}
-              disabled={selectedItems.length === 0 || isLoading}
+              disabled={!selectedItems.length || isLoading}
               loading={isLoading}
             >
               Add Order
@@ -76,7 +76,7 @@ export function AddOrderDialog({
         </div>
 
         <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
-          {selectedItems.length === 0 ? (
+          {!selectedItems.length  ? (
             <div className="text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg">
               <ShoppingCart className="h-8 w-8 mx-auto mb-2 opacity-20" />
               <p>No items added yet</p>

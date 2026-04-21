@@ -17,7 +17,7 @@ export default function AgentsPage() {
         />
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {agents.length === 0 ? (
+          {!agents.length ? (
             <div className="col-span-full py-12 text-center border-2 border-dashed rounded-xl">
               <p className="text-muted-foreground">No delivery agents found.</p>
             </div>

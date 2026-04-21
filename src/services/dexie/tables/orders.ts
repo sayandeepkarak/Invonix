@@ -3,7 +3,8 @@ import { manageAsyncOperation } from "@/lib/utils";
 import type { Order, OrderStatus } from "@/features/orders/types";
 import { usersTable } from "@/services/dexie/tables/users";
 import { DB_TABLES } from "@/services/dexie/const";
-import { agentsTable } from "./agents";
+import { agentsTable } from "@/services/dexie/tables/agents";
+import { ORDER_STATUS, AGENT_STATUS } from "@/features/orders/const";
 
 export const ordersTable = {
   getAll: (): Promise<Order[] | undefined> => {
@@ -58,13 +59,33 @@ export const ordersTable = {
     );
   },
 
+  update: (id: string, updates: Partial<Order>): Promise<void> => {
+    return manageAsyncOperation(
+      async () => {
+        await db
+          .table(DB_TABLES.ORDERS)
+          .update(id, { ...updates, updatedAt: new Date().toISOString() });
+      },
+      () => {
+        return undefined;
+      },
+    );
+  },
+
   updateStatus: (id: string, status: OrderStatus): Promise<void> => {
     return manageAsyncOperation(
       async () => {
-        await db.table(DB_TABLES.ORDERS).update(id, {
-          status,
-          updatedAt: new Date().toISOString(),
-        });
+        const order = await ordersTable.getById(id);
+        
+        await ordersTable.update(id, { status });
+
+        const finalizedStatuses: string[] = [ORDER_STATUS.DELIVERED, ORDER_STATUS.CANCELLED];
+        if (order?.agentId && finalizedStatuses.includes(status)) {
+          await agentsTable.update(order.agentId, {
+            status: AGENT_STATUS.AVAILABLE,
+            orderId: undefined,
+          });
+        }
       },
       () => {
         return undefined;
@@ -75,12 +96,9 @@ export const ordersTable = {
   assignAgent: (id: string, agentId: string): Promise<void> => {
     return manageAsyncOperation(
       async () => {
-        await db.table(DB_TABLES.ORDERS).update(id, {
-          agentId: agentId,
-          updatedAt: new Date().toISOString(),
-        });
+        await ordersTable.update(id, { agentId });
 
-        await db.table(DB_TABLES.AGENTS).update(agentId, {
+        await agentsTable.update(agentId, {
           status: "BUSY",
           orderId: id,
         });

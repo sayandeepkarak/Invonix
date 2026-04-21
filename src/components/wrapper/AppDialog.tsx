@@ -46,8 +46,8 @@ export function AppDialog({
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
         <div className="py-4">{children}</div>
-        {footer ? (
-          <DialogFooter>{footer}</DialogFooter>
+        {footer !== undefined ? (
+          footer && <DialogFooter>{footer}</DialogFooter>
         ) : (
           (onSubmit || cancelLabel) && (
             <DialogFooter>

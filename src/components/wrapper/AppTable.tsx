@@ -38,16 +38,22 @@ export function AppTable<T extends { id: string | number }>({
           <TableHeader className="sticky top-0 z-10 bg-card shadow-sm">
             <TableRow className="bg-muted/50 border-b">
               {columns.map((column) => (
-                <TableHead key={column.key as string} className={column.className}>
+                <TableHead
+                  key={column.key as string}
+                  className={column.className}
+                >
                   {column.header}
                 </TableHead>
               ))}
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.length === 0 ? (
+            {!data.length ? (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   {emptyMessage}
                 </TableCell>
               </TableRow>

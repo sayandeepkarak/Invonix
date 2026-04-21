@@ -3,15 +3,7 @@
 import { useMemo } from "react";
 import { AppButton, AppTable, type AppTableColumn } from "@/components/wrapper";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Edit, Trash2, Package } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import type { Product } from "@/features/inventory/types";
 
 interface InventoryTableProps {

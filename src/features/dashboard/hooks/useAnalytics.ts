@@ -11,7 +11,6 @@ export function useAnalytics() {
     revenueData,
     statusDistribution,
     recentActivity,
-    topProducts,
     isLoading,
   } = useAppSelector((state) => state.dashboard);
   const { orders } = useAppSelector((state) => state.orders);
@@ -43,7 +42,6 @@ export function useAnalytics() {
     revenueData,
     statusDistribution,
     recentActivity,
-    topProducts,
     stats,
     isLoading,
   };

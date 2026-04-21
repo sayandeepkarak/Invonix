@@ -1,5 +1,5 @@
 import { AppDialog, AppButton } from "@/components/wrapper";
-import { User, CheckCircle2 } from "lucide-react";
+import { User } from "lucide-react";
 import type { DeliveryAgent } from "@/features/orders/types/agents";
 import { AGENT_STATUS } from "@/features/orders/const";
 import { Badge } from "@/components/ui/badge";
@@ -27,7 +27,7 @@ export function AgentAssignDialog({
       maxWidth="sm:max-w-md"
     >
       <div className="space-y-4 py-2">
-        {agents.length === 0 ? (
+        {!agents.length ? (
           <p className="text-center text-muted-foreground py-4">
             No agents found.
           </p>

@@ -8,3 +8,4 @@ export * from "@/components/wrapper/AppStepper";
 export * from "@/components/wrapper/AppTextarea";
 export * from "@/components/wrapper/AppDialog";
 export * from "@/components/wrapper/AppTable";
+export * from "@/components/wrapper/AppBadge";
