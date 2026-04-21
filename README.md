@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Invonix - Inventory Management System
+
+Invonix is a professional inventory management solution designed for businesses to track stock, manage orders, and coordinate delivery agents in real-time. It provides a clean, offline-first experience with a focus on speed and ease of use.
+
+## Core Features
+- **Dashboard**: Get a quick overview of your business performance with real-time analytics and revenue insights.
+- **Inventory Management**: Track products, manage stock levels, and set low-stock thresholds to stay ahead of demand.
+- **Order Tracking**: Handle the full lifecycle of customer orders from initial placement to final delivery.
+- **Agent Coordination**: Manage delivery agents and assign them to active orders to ensure timely fulfillment.
+- **Authentication**: Simple and secure sign-in and sign-up flows for business account management.
 
 ## Getting Started
 
-First, run the development server:
-
+### Installation
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Development
+```bash
+pnpm dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build & Lint
+```bash
+pnpm build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Formatting
+```bash
+pnpm format
+```
 
-## Learn More
+## How It Works
+- **Orders & Inventory**: The system automatically links orders to your current product inventory, calculating totals and tracking assignments.
+- **Persistence**: Built with an offline-first approach using Dexie (IndexedDB), ensuring your data remains accessible even without a stable internet connection.
+- **Component System**: Uses a custom wrapper system over Shadcn UI for a consistent, premium user experience throughout the application.
 
-To learn more about Next.js, take a look at the following resources:
+## Branching Strategy
+- **`main`**: Production-ready code.
+- **`staging`**: Development and feature integration.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

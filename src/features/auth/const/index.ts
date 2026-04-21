@@ -1,24 +1,36 @@
-import { BusinessTypeOption } from "../types";
+import { BusinessTypeOption } from "@/features/auth/types";
+
 export const SIGNUP_STEPS = Object.freeze({
   BASIC_INFO: "basic_info",
   EMAIL_VERIFICATION: "email_verification",
   BUSINESS_DETAILS: "business_details",
   COMPLETE: "complete",
-});
-export const SIGNUP_STEP_LABELS: Readonly<Array<string>> = Object.freeze([
+} as const);
+
+export const SIGNUP_STEP_LABELS = Object.freeze([
   "Basic Info",
   "Verify Email",
   "Business Details",
   "Complete",
-]);
+] as const);
+
+export const BUSINESS_TYPE = Object.freeze({
+  RETAIL: "Retail",
+  WHOLESALE: "Wholesale",
+  MANUFACTURING: "Manufacturing",
+  DISTRIBUTION: "Distribution",
+  ECOMMERCE: "E-commerce",
+  FOOD_BEVERAGE: "Food & Beverage",
+  OTHER: "Other",
+} as const);
+
+export const BUSINESS_TYPES: ReadonlyArray<BusinessTypeOption> = Object.freeze(
+  Object.values(BUSINESS_TYPE).map((type) => ({
+    label: type,
+    value: type,
+  })),
+);
+
 export const DEMO_OTP = "123456";
-export const BUSINESS_TYPES: Readonly<Array<BusinessTypeOption>> =
-  Object.freeze([
-    { label: "Retail", value: "Retail" },
-    { label: "Wholesale", value: "Wholesale" },
-    { label: "Manufacturing", value: "Manufacturing" },
-    { label: "Distribution", value: "Distribution" },
-    { label: "E-commerce", value: "E-commerce" },
-    { label: "Food & Beverage", value: "Food & Beverage" },
-    { label: "Other", value: "Other" },
-  ]);
+export const SESSION_STORAGE_KEY = "invonix_session_active";
+export const REDIRECT_TIMEOUT = 5000;

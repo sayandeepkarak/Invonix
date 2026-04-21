@@ -32,6 +32,17 @@ const authSlice = createSlice({
     autoLoginRequest: (state) => {
       state.isLoading = true;
     },
+    updateProfileRequest: (state, _: PayloadAction<Partial<User>>) => {
+      state.isLoading = true;
+      state.error = null;
+    },
+    updatePasswordRequest: (
+      state,
+      _: PayloadAction<{ current: string; next: string }>,
+    ) => {
+      state.isLoading = true;
+      state.error = null;
+    },
     authSuccess: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
       state.isAuthenticated = true;
@@ -59,6 +70,8 @@ export const {
   signupRequest,
   logoutRequest,
   autoLoginRequest,
+  updateProfileRequest,
+  updatePasswordRequest,
   authSuccess,
   authFailure,
   logoutSuccess,
