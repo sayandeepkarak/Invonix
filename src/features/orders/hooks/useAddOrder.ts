@@ -23,11 +23,9 @@ export function useAddOrder({
 
   const availableProducts = products.filter((p) => {
     return (
-      (!selectedItems.find((item) => {
+      !selectedItems.find((item) => {
         return item.product.id === p.id;
-      }) ||
-        p.id === currentProductId) &&
-      p.stock > 0
+      }) && p.stock > 0
     );
   });
 

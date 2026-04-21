@@ -4,7 +4,6 @@ import type { Order, OrderStatus } from "@/features/orders/types";
 import { usersTable } from "@/services/dexie/tables/users";
 import { DB_TABLES } from "@/services/dexie/const";
 import { ORDER_STATUS, AGENT_STATUS } from "@/features/orders/const";
-import { APP_CONSTANTS } from "@/constants";
 import type { User } from "@/features/auth/types";
 
 export const ordersTable = {
@@ -20,9 +19,9 @@ export const ordersTable = {
         const results = orders.map(async (order) => {
           let user = await usersTable.getUserById(order.userId);
 
-          if (!user && order.userId === APP_CONSTANTS.GUEST_USER) {
+          if (!user && order.userId === "GUEST_USER") {
             user = {
-              id: APP_CONSTANTS.GUEST_USER,
+              id: "GUEST_USER",
               name: "Walk-in Customer",
               email: "customer@invonix.com",
               phone: "+123456789",

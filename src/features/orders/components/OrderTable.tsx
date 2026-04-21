@@ -53,14 +53,30 @@ export function OrderTable({
       },
     },
     {
-      header: "Items",
+      header: "Products",
       key: "items",
+      render: (order) => {
+        const productNames = order.items.map((i) => i.name).join(", ");
+        return (
+          <span className="max-w-[200px] truncate font-medium">
+            {productNames}
+          </span>
+        );
+      },
+    },
+    {
+      header: "Quantity",
+      key: "quantity",
       render: (order) => {
         const totalQty = order.items.reduce(
           (sum, item) => sum + item.quantity,
           0,
         );
-        return <span className="font-medium">{totalQty}</span>;
+        return (
+          <span className="text-muted-foreground font-medium">
+            {totalQty} {totalQty === 1 ? "item" : "items"}
+          </span>
+        );
       },
     },
     {
