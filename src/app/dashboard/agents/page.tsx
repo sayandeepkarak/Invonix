@@ -1,9 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useAgents } from "@/features/orders/hooks/useAgents";
 import { LayoutApp } from "@/components/layout/LayoutApp";
 import { PageHeader } from "@/components/PageHeader";
-import { AgentCard } from "@/features/orders/components/AgentCard";
+
+const AgentCard = dynamic(() => {
+  return import("@/features/orders/components/AgentCard").then((mod) => {
+    return mod.AgentCard;
+  });
+}, { ssr: false });
 
 export default function AgentsPage() {
   const { agents } = useAgents();
@@ -22,7 +28,9 @@ export default function AgentsPage() {
               <p className="text-muted-foreground">No delivery agents found.</p>
             </div>
           ) : (
-            agents.map((agent) => <AgentCard key={agent.id} agent={agent} />)
+            agents.map((agent) => {
+              return <AgentCard key={agent.id} agent={agent} />;
+            })
           )}
         </div>
       </div>

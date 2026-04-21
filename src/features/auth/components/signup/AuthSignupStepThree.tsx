@@ -68,11 +68,11 @@ export function AuthSignupStepThree({
           label="I agree to the Terms of Service and Privacy Policy"
           id="termsAccepted"
           checked={watch("termsAccepted")}
-          onCheckedChange={(checked) =>
-            setValue("termsAccepted", !!checked as true, {
+          onCheckedChange={(checked) => {
+            return setValue("termsAccepted", !!checked as true, {
               shouldValidate: true,
-            })
-          }
+            });
+          }}
           error={errors.termsAccepted?.message}
         />
       </div>

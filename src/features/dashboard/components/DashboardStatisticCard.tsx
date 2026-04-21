@@ -40,24 +40,26 @@ export function DashboardStatisticCard({
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      {cards.map((card) => (
-        <AppCard
-          key={card.title}
-          className="overflow-hidden border-none shadow-md"
-        >
-          <div className="flex items-center gap-3">
-            <card.icon className={`h-5 w-5 ${card.color}`} />
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">
-                {card.title}
-              </p>
-              <div className="text-2xl font-bold" suppressHydrationWarning>
-                {card.value.toLocaleString()}
+      {cards.map((card) => {
+        return (
+          <AppCard
+            key={card.title}
+            className="overflow-hidden border-none shadow-md"
+          >
+            <div className="flex items-center gap-3">
+              <card.icon className={`h-5 w-5 ${card.color}`} />
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">
+                  {card.title}
+                </p>
+                <div className="text-2xl font-bold" suppressHydrationWarning>
+                  {card.value.toLocaleString()}
+                </div>
               </div>
             </div>
-          </div>
-        </AppCard>
-      ))}
+          </AppCard>
+        );
+      })}
     </div>
   );
 }

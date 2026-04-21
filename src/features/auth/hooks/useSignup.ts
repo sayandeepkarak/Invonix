@@ -28,7 +28,9 @@ export function useSignup() {
     password: "",
   });
 
-  const stepIndex = useMemo(() => STEP_ORDER.indexOf(currentStep), [currentStep]);
+  const stepIndex = useMemo(() => {
+    return STEP_ORDER.indexOf(currentStep);
+  }, [currentStep]);
 
   useEffect(() => {
     if (isAuthenticated && currentStep === SIGNUP_STEPS.BUSINESS_DETAILS) {

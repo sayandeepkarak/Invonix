@@ -2,9 +2,17 @@
 
 // In Recharts 3, the props passed to the custom content component 
 // are actually TooltipContentProps, which includes the payload.
+interface TooltipPayload {
+  value: number | string;
+  name: string;
+  payload: Record<string, unknown>;
+  color?: string;
+  dataKey?: string | number;
+}
+
 interface DashboardChartTooltipProps {
   active?: boolean;
-  payload?: any[];
+  payload?: TooltipPayload[];
   label?: string | number;
   labelKey?: string;
   valuePrefix?: string;
@@ -19,9 +27,9 @@ export function DashboardChartTooltip({
   valuePrefix = "",
   valueSuffix = "",
 }: DashboardChartTooltipProps) {
-  if (active && payload && payload.length) {
+  if (active && payload && payload[0]) {
     const data = payload[0].payload;
-    const displayLabel = labelKey ? data[labelKey] : label;
+    const displayLabel = labelKey ? (data[labelKey] as string | number) : label;
     const displayValue = payload[0].value;
 
     return (

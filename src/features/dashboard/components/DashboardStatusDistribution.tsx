@@ -48,12 +48,14 @@ export function DashboardStatusDistribution({
               dataKey="count"
               nameKey="status"
             >
-              {chartData.map((_, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
+              {chartData.map((_, index) => {
+                return (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                );
+              })}
             </Pie>
             <Tooltip
               content={<DashboardChartTooltip labelKey="status" valueSuffix=" Orders" />}

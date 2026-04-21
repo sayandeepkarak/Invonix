@@ -64,20 +64,26 @@ export function AuthSignupStepTwo({
       </div>
 
       <div className="flex justify-between gap-2">
-        {otp.map((digit, index) => (
-          <input
-            key={index}
-            ref={(el) => {
-              inputRefs.current[index] = el;
-            }}
-            type="text"
-            maxLength={1}
-            value={digit}
-            onChange={(e) => handleChange(e.target.value, index)}
-            onKeyDown={(e) => handleKeyDown(e, index)}
-            className="w-12 h-14 text-center text-xl font-bold rounded-md border border-input bg-background focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
-          />
-        ))}
+        {otp.map((digit, index) => {
+          return (
+            <input
+              key={index}
+              ref={(el) => {
+                inputRefs.current[index] = el;
+              }}
+              type="text"
+              maxLength={1}
+              value={digit}
+              onChange={(e) => {
+                return handleChange(e.target.value, index);
+              }}
+              onKeyDown={(e) => {
+                return handleKeyDown(e, index);
+              }}
+              className="w-12 h-14 text-center text-xl font-bold rounded-md border border-input bg-background focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+            />
+          );
+        })}
       </div>
 
       {error && <p className="text-sm text-destructive text-center">{error}</p>}

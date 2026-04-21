@@ -1,13 +1,24 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useOrders } from "@/features/orders/hooks/useOrders";
 import { OrderTable } from "@/features/orders/components/OrderTable";
 import { OrderFilters } from "@/features/orders/components/OrderFilters";
 import { LayoutApp } from "@/components/layout/LayoutApp";
 import { PageHeader } from "@/components/PageHeader";
 import { AppButton } from "@/components/wrapper";
-import { AgentAssignDialog } from "@/features/orders/components/AgentAssignDialog";
-import { AddOrderDialog } from "@/features/orders/components/AddOrderDialog";
+
+const AgentAssignDialog = dynamic(() => {
+  return import("@/features/orders/components/AgentAssignDialog").then((mod) => {
+    return mod.AgentAssignDialog;
+  });
+}, { ssr: false });
+
+const AddOrderDialog = dynamic(() => {
+  return import("@/features/orders/components/AddOrderDialog").then((mod) => {
+    return mod.AddOrderDialog;
+  });
+}, { ssr: false });
 
 export default function OrdersPage() {
   const {
@@ -38,7 +49,9 @@ export default function OrdersPage() {
             subtitle="Manage customer orders and delivery updates."
             className="mb-0"
           />
-          <AppButton onClick={() => setIsAddOrderOpen(true)}>
+          <AppButton onClick={() => {
+            return setIsAddOrderOpen(true);
+          }}>
             Add Order
           </AppButton>
         </div>
@@ -59,7 +72,9 @@ export default function OrdersPage() {
 
       <AgentAssignDialog
         open={isAssignDialogOpen}
-        onClose={() => setIsAssignDialogOpen(false)}
+        onClose={() => {
+          return setIsAssignDialogOpen(false);
+        }}
         agents={agents}
         onAssign={handleAssignAgent}
         isLoading={isLoading}
@@ -67,7 +82,9 @@ export default function OrdersPage() {
 
       <AddOrderDialog
         open={isAddOrderOpen}
-        onClose={() => setIsAddOrderOpen(false)}
+        onClose={() => {
+          return setIsAddOrderOpen(false);
+        }}
         products={products}
         onAddOrder={handleAddOrder}
         isLoading={isLoading}

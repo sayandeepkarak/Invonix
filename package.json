@@ -13,6 +13,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-dialog": "^1.1.15",
     "@reduxjs/toolkit": "^2.11.2",
+    "@tanstack/react-virtual": "^3.13.24",
     "@types/lodash": "^4.17.24",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

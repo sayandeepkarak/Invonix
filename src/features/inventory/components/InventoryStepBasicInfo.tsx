@@ -55,7 +55,9 @@ export function InventoryStepBasicInfo({
           label="Category *"
           options={INVENTORY_CATEGORY_OPTIONS}
           value={categoryValue}
-          onChange={(val) => setValue("category", val)}
+          onChange={(val) => {
+            return setValue("category", val);
+          }}
         />
       </div>
 

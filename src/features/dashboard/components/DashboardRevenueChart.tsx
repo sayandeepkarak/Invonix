@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -24,8 +24,8 @@ export function DashboardRevenueChart({
   return (
     <AppCard title="Revenue Trend" className={className}>
       <div className="h-80 w-full pt-4">
-        <ResponsiveContainer>
-          <BarChart data={data}>
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={data} margin={{ left: -20, right: 10, top: 10, bottom: 10 }}>
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
@@ -44,21 +44,23 @@ export function DashboardRevenueChart({
               fontSize={12}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => `$${value}`}
+              tickFormatter={(value) => {
+                return `$${value}`;
+              }}
             />
             <Tooltip
-              cursor={{ fill: "var(--muted)", opacity: 0.1 }}
               content={<DashboardChartTooltip valuePrefix="$" />}
             />
-            <Bar
+            <Line
+              type="monotone"
               dataKey="amount"
-              fill="var(--chart-primary)"
-              radius={[6, 6, 0, 0]}
-              barSize={24}
-              activeBar={{ fill: "var(--chart-primary)", opacity: 0.8 }}
+              stroke="var(--chart-primary)"
+              strokeWidth={3}
+              dot={{ fill: "var(--chart-primary)", r: 4, strokeWidth: 2, stroke: "var(--card)" }}
+              activeDot={{ r: 6, strokeWidth: 0 }}
               animationDuration={1500}
             />
-          </BarChart>
+          </LineChart>
         </ResponsiveContainer>
       </div>
     </AppCard>

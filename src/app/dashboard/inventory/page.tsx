@@ -1,14 +1,25 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useInventory } from "@/features/inventory/hooks/useInventory";
 import {
   InventoryToolbar,
   InventoryTable,
-  InventoryDialog,
-  InventoryDeleteDialog,
 } from "@/features/inventory/components";
 import { LayoutApp } from "@/components/layout/LayoutApp";
 import { PageHeader } from "@/components/PageHeader";
+
+const InventoryDialog = dynamic(() => {
+  return import("@/features/inventory/components/InventoryDialog").then((mod) => {
+    return mod.InventoryDialog;
+  });
+}, { ssr: false });
+
+const InventoryDeleteDialog = dynamic(() => {
+  return import("@/features/inventory/components/InventoryDeleteDialog").then((mod) => {
+    return mod.InventoryDeleteDialog;
+  });
+}, { ssr: false });
 
 export default function InventoryPage() {
   const {
@@ -62,7 +73,9 @@ export default function InventoryPage() {
           open={!!deleteTarget}
           productName={deleteTarget?.name ?? ""}
           isLoading={isLoading}
-          onClose={() => setDeleteTarget(null)}
+          onClose={() => {
+            return setDeleteTarget(null);
+          }}
           onConfirm={handleConfirmDelete}
         />
       </div>

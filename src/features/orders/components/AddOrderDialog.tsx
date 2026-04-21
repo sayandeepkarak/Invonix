@@ -82,53 +82,61 @@ export function AddOrderDialog({
               <p>No items added yet</p>
             </div>
           ) : (
-            selectedItems.map((item) => (
-              <div
-                key={item.product.id}
-                className="flex items-center justify-between p-3 rounded-lg border"
-              >
-                <div className="flex flex-col">
-                  <span className="font-medium">{item.product.name}</span>
-                  <span className="text-xs text-muted-foreground">
-                    Available Stock: {item.product.stock}
-                  </span>
-                </div>
+            selectedItems.map((item) => {
+              return (
+                <div
+                  key={item.product.id}
+                  className="flex items-center justify-between p-3 rounded-lg border"
+                >
+                  <div className="flex flex-col">
+                    <span className="font-medium">{item.product.name}</span>
+                    <span className="text-xs text-muted-foreground">
+                      Available Stock: {item.product.stock}
+                    </span>
+                  </div>
 
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center border rounded-md">
-                    <button
-                      type="button"
-                      onClick={() => updateQuantity(item.product.id, -1)}
-                      className="p-1 hover:bg-muted disabled:opacity-50"
-                      disabled={item.quantity <= 1}
-                    >
-                      <Minus className="h-4 w-4" />
-                    </button>
-                    <span className="w-8 text-center text-sm font-medium">
-                      {item.quantity}
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center border rounded-md">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          return updateQuantity(item.product.id, -1);
+                        }}
+                        className="p-1 hover:bg-muted disabled:opacity-50"
+                        disabled={item.quantity <= 1}
+                      >
+                        <Minus className="h-4 w-4" />
+                      </button>
+                      <span className="w-8 text-center text-sm font-medium">
+                        {item.quantity}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          return updateQuantity(item.product.id, 1);
+                        }}
+                        className="p-1 hover:bg-muted disabled:opacity-50"
+                        disabled={item.quantity >= item.product.stock}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </button>
+                    </div>
+                    <span className="text-[10px] text-muted-foreground w-12">
+                      (Max: {item.product.stock})
                     </span>
                     <button
                       type="button"
-                      onClick={() => updateQuantity(item.product.id, 1)}
-                      className="p-1 hover:bg-muted disabled:opacity-50"
-                      disabled={item.quantity >= item.product.stock}
+                      onClick={() => {
+                        return removeItem(item.product.id);
+                      }}
+                      className="text-destructive p-1"
                     >
-                      <Plus className="h-4 w-4" />
+                      <Trash2 className="h-4 w-4" />
                     </button>
                   </div>
-                  <span className="text-[10px] text-muted-foreground w-12">
-                    (Max: {item.product.stock})
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => removeItem(item.product.id)}
-                    className="text-destructive p-1"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>

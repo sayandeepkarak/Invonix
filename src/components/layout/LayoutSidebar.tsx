@@ -56,7 +56,9 @@ export function LayoutSidebar() {
   const initials = user?.name
     ? user.name
         .split(" ")
-        .map((n: string) => n[0])
+        .map((n: string) => {
+          return n[0];
+        })
         .join("")
         .toUpperCase()
     : "U";
@@ -78,7 +80,9 @@ export function LayoutSidebar() {
           {navItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <SidebarMenuButton
-                render={(props) => <Link {...props} href={item.href} />}
+                render={(props) => {
+                  return <Link {...props} href={item.href} />;
+                }}
                 isActive={pathname === item.href}
                 tooltip={item.title}
               >
@@ -94,27 +98,29 @@ export function LayoutSidebar() {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger
-                render={(props: React.HTMLAttributes<HTMLElement>) => (
-                  <SidebarMenuButton
-                    {...props}
-                    size="lg"
-                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                  >
-                    <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarFallback className="rounded-lg bg-primary/10 text-primary">
-                        {initials}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                      <span className="truncate font-semibold">
-                        {user?.name || "User"}
-                      </span>
-                      <span className="truncate text-xs text-muted-foreground">
-                        {user?.email || "user@example.com"}
-                      </span>
-                    </div>
-                  </SidebarMenuButton>
-                )}
+                render={(props: React.HTMLAttributes<HTMLElement>) => {
+                  return (
+                    <SidebarMenuButton
+                      {...props}
+                      size="lg"
+                      className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                    >
+                      <Avatar className="h-8 w-8 rounded-lg">
+                        <AvatarFallback className="rounded-lg bg-primary/10 text-primary">
+                          {initials}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                        <span className="truncate font-semibold">
+                          {user?.name || "User"}
+                        </span>
+                        <span className="truncate text-xs text-muted-foreground">
+                          {user?.email || "user@example.com"}
+                        </span>
+                      </div>
+                    </SidebarMenuButton>
+                  );
+                }}
               />
               <DropdownMenuContent
                 className="w-56 rounded-lg"

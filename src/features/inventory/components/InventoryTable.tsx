@@ -36,63 +36,75 @@ export function InventoryTable({
     {
       header: "Product",
       key: "name",
-      render: (product) => <span className="font-medium">{product.name}</span>,
+      render: (product) => {
+        return <span className="font-medium">{product.name}</span>;
+      },
     },
     {
       header: "Category",
       key: "category",
-      render: (product) => (
-        <Badge variant="secondary">{product.category}</Badge>
-      ),
+      render: (product) => {
+        return <Badge variant="secondary">{product.category}</Badge>;
+      },
     },
     {
       header: "Price",
       key: "price",
       className: "text-right",
-      render: (product) => `$${product.price.toFixed(2)}`,
+      render: (product) => {
+        return `$${product.price.toFixed(2)}`;
+      },
     },
     {
       header: "Stock",
       key: "stock",
       className: "text-right",
-      render: (product) => (
-        <span
-          className={
-            product.stock <= product.lowStockThreshold
-              ? "text-destructive font-bold"
-              : ""
-          }
-        >
-          {product.stock}
-        </span>
-      ),
+      render: (product) => {
+        return (
+          <span
+            className={
+              product.stock <= product.lowStockThreshold
+                ? "text-destructive font-bold"
+                : ""
+            }
+          >
+            {product.stock}
+          </span>
+        );
+      },
     },
     {
       header: "Actions",
       key: "actions",
       className: "text-right",
-      render: (product) => (
-        <div className="flex items-center justify-end gap-2">
-          <AppButton
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-muted-foreground hover:text-foreground"
-            onClick={() => onEdit(product)}
-            tooltip="Edit product"
-          >
-            <Edit className="h-4 w-4" />
-          </AppButton>
-          <AppButton
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-destructive hover:bg-destructive/10"
-            onClick={() => onDelete(product)}
-            tooltip="Delete product"
-          >
-            <Trash2 className="h-4 w-4" />
-          </AppButton>
-        </div>
-      ),
+      render: (product) => {
+        return (
+          <div className="flex items-center justify-end gap-2">
+            <AppButton
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-muted-foreground hover:text-foreground"
+              onClick={() => {
+                return onEdit(product);
+              }}
+              tooltip="Edit product"
+            >
+              <Edit className="h-4 w-4" />
+            </AppButton>
+            <AppButton
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-destructive hover:bg-destructive/10"
+              onClick={() => {
+                return onDelete(product);
+              }}
+              tooltip="Delete product"
+            >
+              <Trash2 className="h-4 w-4" />
+            </AppButton>
+          </div>
+        );
+      },
     },
   ];
 

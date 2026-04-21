@@ -28,21 +28,23 @@ export function OrderTable({
     {
       header: "Order ID",
       key: "id",
-      render: (order) => (
-        <span>#{order.id.slice(0, 8).toUpperCase()}</span>
-      ),
+      render: (order) => {
+        return <span>#{order.id.slice(0, 8).toUpperCase()}</span>;
+      },
     },
     {
       header: "Customer",
       key: "user",
-      render: (order) => (
-        <div className="flex flex-col">
-          <span className="font-medium">{order.user?.name || "Unknown"}</span>
-          <span className="text-xs text-muted-foreground">
-            {order.user?.email}
-          </span>
-        </div>
-      ),
+      render: (order) => {
+        return (
+          <div className="flex flex-col">
+            <span className="font-medium">{order.user?.name || "Unknown"}</span>
+            <span className="text-xs text-muted-foreground">
+              {order.user?.email}
+            </span>
+          </div>
+        );
+      },
     },
     {
       header: "Items",
@@ -56,7 +58,9 @@ export function OrderTable({
       header: "Total",
       key: "totalAmount",
       className: "font-semibold",
-      render: (order) => `$${order.totalAmount.toLocaleString()}`,
+      render: (order) => {
+        return `$${order.totalAmount.toLocaleString()}`;
+      },
     },
     {
       header: "Status",
@@ -109,7 +113,9 @@ export function OrderTable({
             variant="outline"
             size="sm"
             className="h-8 text-xs px-3"
-            onClick={() => onAssign(order)}
+            onClick={() => {
+              return onAssign(order);
+            }}
           >
             Assign Agent
           </AppButton>
@@ -119,11 +125,13 @@ export function OrderTable({
     {
       header: "Date",
       key: "createdAt",
-      render: (order) => (
-        <span className="text-sm text-muted-foreground" suppressHydrationWarning>
-          {new Date(order.createdAt).toLocaleDateString()}
-        </span>
-      ),
+      render: (order) => {
+        return (
+          <span className="text-sm text-muted-foreground" suppressHydrationWarning>
+            {new Date(order.createdAt).toLocaleDateString()}
+          </span>
+        );
+      },
     },
   ];
 

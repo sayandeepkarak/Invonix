@@ -15,7 +15,9 @@ import type { InventoryFormValues } from "@/features/inventory/schema";
 export function useInventory() {
   const dispatch = useAppDispatch();
   const { products, selectedProduct, isLoading, isDialogOpen, isEditMode } =
-    useAppSelector((state) => state.inventory);
+    useAppSelector((state) => {
+      return state.inventory;
+    });
 
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
@@ -26,15 +28,15 @@ export function useInventory() {
   }, [dispatch]);
 
   const handleAddProduct = useCallback(() => {
-    dispatch(openDialog(null));
+    return dispatch(openDialog(null));
   }, [dispatch]);
 
   const handleEdit = useCallback((product: Product) => {
-    dispatch(openDialog(product));
+    return dispatch(openDialog(product));
   }, [dispatch]);
 
   const handleDelete = useCallback((product: Product) => {
-    setDeleteTarget(product);
+    return setDeleteTarget(product);
   }, []);
 
   const handleConfirmDelete = useCallback(() => {
@@ -48,7 +50,9 @@ export function useInventory() {
       ? data.tags
           .split(",")
           .map((t) => t.trim())
-          .filter(Boolean)
+          .filter((t) => {
+            return Boolean(t);
+          })
       : [];
 
     if (isEditMode && selectedProduct) {
@@ -72,7 +76,7 @@ export function useInventory() {
   }, [dispatch, isEditMode, selectedProduct]);
 
   const handleCloseDialog = useCallback(() => {
-    dispatch(closeDialog());
+    return dispatch(closeDialog());
   }, [dispatch]);
 
   return {

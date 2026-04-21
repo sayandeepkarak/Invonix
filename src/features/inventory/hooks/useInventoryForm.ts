@@ -55,12 +55,14 @@ export function useInventoryForm({
   }, [open, isEdit, product]);
 
   const handleNext = useCallback((stepData: Partial<InventoryFormValues>, nextStep: string) => {
-    setFormData((prev) => ({ ...prev, ...stepData }));
+    setFormData((prev) => {
+      return { ...prev, ...stepData };
+    });
     setCurrentStep(nextStep);
   }, []);
 
   const handleBack = useCallback((prevStep: string) => {
-    setCurrentStep(prevStep);
+    return setCurrentStep(prevStep);
   }, []);
 
   const handleFinalSubmit = useCallback((finalData: Partial<InventoryFormValues>) => {

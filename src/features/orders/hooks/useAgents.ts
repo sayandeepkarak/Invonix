@@ -4,7 +4,9 @@ import { fetchAgentsRequest } from "@/features/orders/store/orderSlice";
 
 export function useAgents() {
   const dispatch = useAppDispatch();
-  const { agents, isLoading, error } = useAppSelector((state) => state.orders);
+  const { agents, isLoading, error } = useAppSelector((state) => {
+    return state.orders;
+  });
 
   useEffect(() => {
     dispatch(fetchAgentsRequest());

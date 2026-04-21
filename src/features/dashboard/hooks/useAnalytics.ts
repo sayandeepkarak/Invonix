@@ -12,9 +12,15 @@ export function useAnalytics() {
     statusDistribution,
     recentActivity,
     isLoading,
-  } = useAppSelector((state) => state.dashboard);
-  const { orders } = useAppSelector((state) => state.orders);
-  const { products } = useAppSelector((state) => state.inventory);
+  } = useAppSelector((state) => {
+    return state.dashboard;
+  });
+  const { orders } = useAppSelector((state) => {
+    return state.orders;
+  });
+  const { products } = useAppSelector((state) => {
+    return state.inventory;
+  });
 
   useEffect(() => {
     dispatch(fetchOrdersRequest());
@@ -24,12 +30,14 @@ export function useAnalytics() {
 
   const stats = useMemo(() => {
     const totalOrders = (orders || []).length;
-    const pendingDeliveries = (orders || []).filter((o) =>
-      ([ORDER_STATUS.PENDING, ORDER_STATUS.CONFIRMED] as string[]).includes(
+    const pendingDeliveries = (orders || []).filter((o) => {
+      return ([ORDER_STATUS.PENDING, ORDER_STATUS.CONFIRMED] as string[]).includes(
         o.status,
-      ),
-    ).length;
-    const activeProducts = (products || []).filter((p) => p.isActive).length;
+      );
+    }).length;
+    const activeProducts = (products || []).filter((p) => {
+      return p.isActive;
+    }).length;
 
     return {
       totalOrders,

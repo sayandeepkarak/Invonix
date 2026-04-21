@@ -28,9 +28,9 @@ export function OrderFilters({
         <AppInput
           placeholder="Search by customer or ID..."
           value={searchQuery}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onSearchChange(e.target.value)
-          }
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            return onSearchChange(e.target.value);
+          }}
           icon={<Search className="h-4 w-4" />}
           className="h-9"
         />
@@ -39,7 +39,9 @@ export function OrderFilters({
         <AppSelect
           options={ORDER_STATUS_OPTIONS}
           value={statusFilter}
-          onChange={(val) => onStatusChange(val as OrderStatusFilter)}
+          onChange={(val) => {
+            return onStatusChange(val as OrderStatusFilter);
+          }}
           placeholder="Filter by status"
           className="h-9"
         />

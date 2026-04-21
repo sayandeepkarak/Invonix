@@ -1,10 +1,25 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useAnalytics } from "@/features/dashboard/hooks/useAnalytics";
 import { DashboardStatisticCard } from "@/features/dashboard/components/DashboardStatisticCard";
-import { DashboardRevenueChart } from "@/features/dashboard/components/DashboardRevenueChart";
-import { DashboardStatusDistribution } from "@/features/dashboard/components/DashboardStatusDistribution";
 import { PageHeader } from "@/components/PageHeader";
+
+const DashboardRevenueChart = dynamic(() => {
+  return import("@/features/dashboard/components/DashboardRevenueChart").then((mod) => {
+    return mod.DashboardRevenueChart;
+  });
+}, { ssr: false, loading: () => {
+  return <div className="h-80 w-full animate-pulse bg-muted rounded-xl" />;
+} });
+
+const DashboardStatusDistribution = dynamic(() => {
+  return import("@/features/dashboard/components/DashboardStatusDistribution").then((mod) => {
+    return mod.DashboardStatusDistribution;
+  });
+}, { ssr: false, loading: () => {
+  return <div className="h-80 w-full animate-pulse bg-muted rounded-xl" />;
+} });
 
 export function DashboardAnalytics() {
   const { revenueData, statusDistribution, stats } = useAnalytics();

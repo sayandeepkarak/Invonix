@@ -66,7 +66,9 @@ export function AgentAssignDialog({
                   <AppButton
                     size="sm"
                     variant={isBusy ? "outline" : "default"}
-                    onClick={() => onAssign(agent.id)}
+                    onClick={() => {
+                      return onAssign(agent.id);
+                    }}
                     disabled={isBusy || isLoading}
                     className="h-8"
                   >

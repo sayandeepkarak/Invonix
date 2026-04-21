@@ -9,7 +9,9 @@ export function useSignin() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { isLoading, error, isAuthenticated } = useAppSelector(
-    (state) => state.auth,
+    (state) => {
+      return state.auth;
+    },
   );
 
   const form = useForm<LoginPayload>();

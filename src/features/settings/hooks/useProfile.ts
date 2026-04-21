@@ -5,7 +5,9 @@ import { updateProfileRequest } from "@/features/auth/store";
 import type { User as UserType } from "@/features/auth/types";
 
 export function useProfile() {
-  const { user, isLoading } = useAppSelector((state) => state.auth);
+  const { user, isLoading } = useAppSelector((state) => {
+    return state.auth;
+  });
   const dispatch = useAppDispatch();
 
   const form = useForm<Partial<UserType>>({

@@ -1,8 +1,14 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { LayoutApp } from "@/components/layout/LayoutApp";
-import { SettingsProfile } from "@/features/settings/components/SettingsProfile";
 import { PageHeader } from "@/components/PageHeader";
+
+const SettingsProfile = dynamic(() => {
+  return import("@/features/settings/components/SettingsProfile").then((mod) => {
+    return mod.SettingsProfile;
+  });
+}, { ssr: false });
 
 export default function SettingsPage() {
   return (

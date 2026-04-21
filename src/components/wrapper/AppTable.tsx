@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   Table,
   TableBody,
@@ -6,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { cn } from "@/lib/utils";
 
 export interface AppTableColumn<T> {
@@ -22,6 +23,7 @@ interface AppTableProps<T> {
   className?: string;
   emptyMessage?: string;
   maxHeight?: string;
+  estimateRowHeight?: number;
 }
 
 export function AppTable<T extends { id: string | number }>({
@@ -30,21 +32,40 @@ export function AppTable<T extends { id: string | number }>({
   className,
   emptyMessage = "No data available.",
   maxHeight = "calc(100vh - 300px)",
+  estimateRowHeight = 52,
 }: AppTableProps<T>) {
+  const parentRef = React.useRef<HTMLDivElement>(null);
+
+  const virtualizer = useVirtualizer({
+    count: data.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => estimateRowHeight,
+    overscan: 5,
+  });
+
+  const virtualRows = virtualizer.getVirtualItems();
+  const totalHeight = virtualizer.getTotalSize();
+
   return (
     <div className={cn("rounded-md border bg-card overflow-hidden", className)}>
-      <ScrollArea style={{ maxHeight }}>
-        <Table>
-          <TableHeader className="sticky top-0 z-10 bg-card shadow-sm">
+      <div
+        ref={parentRef}
+        className="overflow-auto relative"
+        style={{ maxHeight }}
+      >
+        <Table className="relative">
+          <TableHeader className="sticky top-0 z-20 bg-card shadow-sm">
             <TableRow className="bg-muted/50 border-b">
-              {columns.map((column) => (
-                <TableHead
-                  key={column.key as string}
-                  className={column.className}
-                >
-                  {column.header}
-                </TableHead>
-              ))}
+              {columns.map((column) => {
+                return (
+                  <TableHead
+                    key={column.key as string}
+                    className={column.className}
+                  >
+                    {column.header}
+                  </TableHead>
+                );
+              })}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -58,27 +79,48 @@ export function AppTable<T extends { id: string | number }>({
                 </TableCell>
               </TableRow>
             ) : (
-              data.map((item) => (
-                <TableRow
-                  key={item.id}
-                  className="hover:bg-muted/30 transition-colors"
-                >
-                  {columns.map((column) => (
-                    <TableCell
-                      key={`${item.id}-${column.key as string}`}
-                      className={column.className}
+              <>
+                {virtualRows.length > 0 && (
+                  <tr style={{ height: `${virtualRows[0]?.start ?? 0}px` }} />
+                )}
+                {virtualRows.map((virtualRow) => {
+                  const item = data[virtualRow.index];
+                  if (!item) return null;
+                  return (
+                    <TableRow
+                      key={item.id}
+                      data-index={virtualRow.index}
+                      ref={virtualizer.measureElement}
+                      className="hover:bg-muted/30 transition-colors"
                     >
-                      {column.render
-                        ? column.render(item)
-                        : (item[column.key as keyof T] as React.ReactNode)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+                      {columns.map((column) => {
+                        return (
+                          <TableCell
+                            key={`${item.id}-${column.key as string}`}
+                            className={column.className}
+                          >
+                            {column.render
+                              ? column.render(item)
+                              : (item[column.key as keyof T] as React.ReactNode)}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })}
+                {/* Spacer to push content up */}
+                {virtualRows.length > 0 && (
+                  <tr
+                    style={{
+                      height: `${totalHeight - (virtualRows[virtualRows.length - 1]?.end ?? totalHeight)}px`,
+                    }}
+                  />
+                )}
+              </>
             )}
           </TableBody>
         </Table>
-      </ScrollArea>
+      </div>
     </div>
   );
 }

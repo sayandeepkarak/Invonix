@@ -15,8 +15,12 @@ import { APP_CONSTANTS } from "@/constants";
 
 export function useOrders() {
   const dispatch = useAppDispatch();
-  const { orders, agents, isLoading } = useAppSelector((state) => state.orders);
-  const { products } = useAppSelector((state) => state.inventory);
+  const { orders, agents, isLoading } = useAppSelector((state) => {
+    return state.orders;
+  });
+  const { products } = useAppSelector((state) => {
+    return state.inventory;
+  });
 
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
@@ -79,7 +83,9 @@ export function useOrders() {
   const handleAddOrder = useCallback(
     (items: OrderItem[]) => {
       const totalAmount = items.reduce(
-        (sum, item) => sum + item.price * item.quantity,
+        (sum, item) => {
+          return sum + item.price * item.quantity;
+        },
         0,
       );
 
