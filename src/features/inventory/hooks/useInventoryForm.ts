@@ -1,9 +1,10 @@
-import { useEffect, useCallback, useState } from "react";
-import {
-  InventoryFormValues,
-} from "@/features/inventory/schema";
+import { useEffect, useState } from "react";
+import { InventoryFormValues } from "@/features/inventory/schema";
 import type { Product } from "@/features/inventory/types";
-import { INVENTORY_CATEGORY, INVENTORY_STEPS } from "@/features/inventory/const";
+import {
+  INVENTORY_CATEGORY,
+  INVENTORY_STEPS,
+} from "@/features/inventory/const";
 
 interface UseInventoryFormProps {
   open: boolean;
@@ -18,7 +19,9 @@ export function useInventoryForm({
   product,
   onSubmit,
 }: UseInventoryFormProps) {
-  const [currentStep, setCurrentStep] = useState<string>(INVENTORY_STEPS.BASIC_INFO);
+  const [currentStep, setCurrentStep] = useState<string>(
+    INVENTORY_STEPS.BASIC_INFO,
+  );
   const [formData, setFormData] = useState<Partial<InventoryFormValues>>({});
 
   useEffect(() => {
@@ -54,21 +57,24 @@ export function useInventoryForm({
     }
   }, [open, isEdit, product]);
 
-  const handleNext = useCallback((stepData: Partial<InventoryFormValues>, nextStep: string) => {
+  const handleNext = (
+    stepData: Partial<InventoryFormValues>,
+    nextStep: string,
+  ) => {
     setFormData((prev) => {
       return { ...prev, ...stepData };
     });
     setCurrentStep(nextStep);
-  }, []);
+  };
 
-  const handleBack = useCallback((prevStep: string) => {
+  const handleBack = (prevStep: string) => {
     return setCurrentStep(prevStep);
-  }, []);
+  };
 
-  const handleFinalSubmit = useCallback((finalData: Partial<InventoryFormValues>) => {
+  const handleFinalSubmit = (finalData: Partial<InventoryFormValues>) => {
     const fullData = { ...formData, ...finalData } as InventoryFormValues;
     onSubmit(fullData);
-  }, [formData, onSubmit]);
+  };
 
   return {
     currentStep,

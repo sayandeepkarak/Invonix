@@ -12,7 +12,7 @@ interface AgentAssignDialogProps {
   isLoading: boolean;
 }
 
-export function AgentAssignDialog({
+export default function AgentAssignDialog({
   open,
   onClose,
   agents,
@@ -28,7 +28,7 @@ export function AgentAssignDialog({
     >
       <div className="space-y-4 pt-2">
         {!agents.length ? (
-          <p className="text-center text-muted-foreground py-4">
+          <p className="text-muted-foreground py-4 text-center">
             No agents found.
           </p>
         ) : (
@@ -38,10 +38,10 @@ export function AgentAssignDialog({
               return (
                 <div
                   key={agent.id}
-                  className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
+                  className="bg-card hover:bg-muted/50 flex items-center justify-between rounded-lg border p-3 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    <div className="bg-primary/10 text-primary flex h-9 w-9 items-center justify-center rounded-full">
                       <User className="h-5 w-5" />
                     </div>
                     <div className="flex flex-col">
@@ -51,12 +51,12 @@ export function AgentAssignDialog({
                       <div className="flex items-center gap-2">
                         <Badge
                           variant={isBusy ? "outline" : "secondary"}
-                          className="text-[10px] h-4 px-1"
+                          className="h-4 px-1 text-[10px]"
                         >
                           {isBusy ? "Busy" : "Available"}
                         </Badge>
                         {agent.order && (
-                          <span className="text-[10px] text-muted-foreground">
+                          <span className="text-muted-foreground text-[10px]">
                             Order: #{agent.order.id.slice(0, 6).toUpperCase()}
                           </span>
                         )}

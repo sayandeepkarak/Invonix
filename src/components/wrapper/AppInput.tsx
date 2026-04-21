@@ -22,7 +22,7 @@ export function AppInput({
       {label && <Label htmlFor={id}>{label}</Label>}
       <div className="relative">
         {icon && (
-          <div className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground">
+          <div className="text-muted-foreground absolute top-1/2 left-2.5 -translate-y-1/2">
             {icon}
           </div>
         )}
@@ -37,7 +37,7 @@ export function AppInput({
           {...props}
         />
       </div>
-      {error && <p className="text-xs font-medium text-destructive">{error}</p>}
+      {error && <p className="text-destructive text-xs font-medium">{error}</p>}
     </div>
   );
 }

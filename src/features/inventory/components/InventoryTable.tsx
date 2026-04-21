@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { AppButton, AppTable, type AppTableColumn } from "@/components/wrapper";
 import { Badge } from "@/components/ui/badge";
 import { Edit, Trash2 } from "lucide-react";
@@ -19,14 +18,12 @@ export function InventoryTable({
   onEdit,
   onDelete,
 }: InventoryTableProps) {
-  const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      if (!product.isActive) {
-        return false;
-      }
-      return product.name.toLowerCase().includes(searchQuery.toLowerCase());
-    });
-  }, [products, searchQuery]);
+  const filteredProducts = products.filter((product) => {
+    if (!product.isActive) {
+      return false;
+    }
+    return product.name.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   const columns: AppTableColumn<Product>[] = [
     {
@@ -83,7 +80,7 @@ export function InventoryTable({
             <AppButton
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-muted-foreground hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground h-8 w-8"
               onClick={() => {
                 return onEdit(product);
               }}
@@ -94,7 +91,7 @@ export function InventoryTable({
             <AppButton
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-destructive hover:bg-destructive/10"
+              className="text-destructive hover:bg-destructive/10 h-8 w-8"
               onClick={() => {
                 return onDelete(product);
               }}

@@ -17,7 +17,7 @@ interface DashboardRevenueChartProps {
   className?: string;
 }
 
-export function DashboardRevenueChart({
+export default function DashboardRevenueChart({
   data,
   className,
 }: DashboardRevenueChartProps) {
@@ -25,22 +25,25 @@ export function DashboardRevenueChart({
     <AppCard title="Revenue Trend" className={className}>
       <div className="h-80 w-full pt-4">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ left: -20, right: 10, top: 10, bottom: 10 }}>
+          <LineChart
+            data={data}
+            margin={{ left: -20, right: 10, top: 10, bottom: 10 }}
+          >
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
-              stroke="hsl(var(--muted)/0.5)"
+              stroke="var(--border)"
             />
             <XAxis
               dataKey="month"
-              stroke="hsl(var(--muted-foreground))"
+              stroke="var(--muted-foreground)"
               fontSize={12}
               tickLine={false}
               axisLine={false}
               dy={10}
             />
             <YAxis
-              stroke="hsl(var(--muted-foreground))"
+              stroke="var(--muted-foreground)"
               fontSize={12}
               tickLine={false}
               axisLine={false}
@@ -48,15 +51,18 @@ export function DashboardRevenueChart({
                 return `$${value}`;
               }}
             />
-            <Tooltip
-              content={<DashboardChartTooltip valuePrefix="$" />}
-            />
+            <Tooltip content={<DashboardChartTooltip valuePrefix="$" />} />
             <Line
               type="monotone"
               dataKey="amount"
-              stroke="var(--chart-primary)"
+              stroke="#3b82f6"
               strokeWidth={3}
-              dot={{ fill: "var(--chart-primary)", r: 4, strokeWidth: 2, stroke: "var(--card)" }}
+              dot={{
+                fill: "#3b82f6",
+                r: 4,
+                strokeWidth: 2,
+                stroke: "var(--card)",
+              }}
               activeDot={{ r: 6, strokeWidth: 0 }}
               animationDuration={1500}
             />

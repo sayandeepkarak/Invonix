@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { updateProfileRequest } from "@/features/auth/store";
@@ -32,9 +32,9 @@ export function useProfile() {
     }
   }, [user, reset]);
 
-  const onSubmit = useCallback((data: Partial<UserType>) => {
+  const onSubmit = (data: Partial<UserType>) => {
     dispatch(updateProfileRequest(data));
-  }, [dispatch]);
+  };
 
   return {
     form,

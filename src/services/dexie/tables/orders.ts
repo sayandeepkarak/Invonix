@@ -3,7 +3,6 @@ import { manageAsyncOperation } from "@/lib/utils";
 import type { Order, OrderStatus } from "@/features/orders/types";
 import { usersTable } from "@/services/dexie/tables/users";
 import { DB_TABLES } from "@/services/dexie/const";
-import { agentsTable } from "@/services/dexie/tables/agents";
 import { ORDER_STATUS, AGENT_STATUS } from "@/features/orders/const";
 
 export const ordersTable = {
@@ -18,7 +17,9 @@ export const ordersTable = {
 
         const results = orders.map(async (order) => {
           const user = await usersTable.getUserById(order.userId);
-          const agent = await agentsTable.getById(order.agentId);
+          const agent = order.agentId
+            ? await db.table(DB_TABLES.AGENTS).get(order.agentId)
+            : null;
           return { ...order, user, agent };
         });
 
@@ -38,7 +39,7 @@ export const ordersTable = {
 
         const user = await usersTable.getUserById(order.userId);
         const agent = order.agentId
-          ? await agentsTable.getById(order.agentId)
+          ? await db.table(DB_TABLES.AGENTS).get(order.agentId)
           : null;
         return { ...order, user, agent };
       },
@@ -76,12 +77,15 @@ export const ordersTable = {
     return manageAsyncOperation(
       async () => {
         const order = await ordersTable.getById(id);
-        
+
         await ordersTable.update(id, { status });
 
-        const finalizedStatuses: string[] = [ORDER_STATUS.DELIVERED, ORDER_STATUS.CANCELLED];
+        const finalizedStatuses: string[] = [
+          ORDER_STATUS.DELIVERED,
+          ORDER_STATUS.CANCELLED,
+        ];
         if (order?.agentId && finalizedStatuses.includes(status)) {
-          await agentsTable.update(order.agentId, {
+          await db.table(DB_TABLES.AGENTS).update(order.agentId, {
             status: AGENT_STATUS.AVAILABLE,
             orderId: undefined,
           });
@@ -98,7 +102,7 @@ export const ordersTable = {
       async () => {
         await ordersTable.update(id, { agentId });
 
-        await agentsTable.update(agentId, {
+        await db.table(DB_TABLES.AGENTS).update(agentId, {
           status: "BUSY",
           orderId: id,
         });

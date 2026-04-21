@@ -33,12 +33,12 @@ export function AppCheckbox({
         />
         <Label
           htmlFor={id}
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         >
           {label}
         </Label>
       </div>
-      {error && <p className="text-xs font-medium text-destructive">{error}</p>}
+      {error && <p className="text-destructive text-xs font-medium">{error}</p>}
     </div>
   );
 }

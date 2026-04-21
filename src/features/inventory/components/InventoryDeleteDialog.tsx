@@ -10,7 +10,7 @@ interface InventoryDeleteDialogProps {
   onConfirm: () => void;
 }
 
-export function InventoryDeleteDialog({
+export default function InventoryDeleteDialog({
   open,
   productName,
   isLoading,
@@ -28,7 +28,7 @@ export function InventoryDeleteDialog({
       isLoading={isLoading}
       maxWidth="sm:max-w-[425px]"
     >
-      <p className="text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-sm">
         Are you sure you want to delete{" "}
         <strong className="text-foreground">&quot;{productName}&quot;</strong>?
         This action cannot be undone and will remove the item from your

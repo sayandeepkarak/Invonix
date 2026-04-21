@@ -3,12 +3,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface DashboardState {
   revenueData: { month: string; amount: number }[];
   statusDistribution: { status: string; count: number }[];
-  recentActivity: {
-    id: string;
-    type: string;
-    message: string;
-    timestamp: string;
-  }[];
   isLoading: boolean;
   error: string | null;
 }
@@ -16,7 +10,6 @@ interface DashboardState {
 const initialState: DashboardState = {
   revenueData: [],
   statusDistribution: [],
-  recentActivity: [],
   isLoading: false,
   error: null,
 };

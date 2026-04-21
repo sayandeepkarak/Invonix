@@ -26,7 +26,7 @@ export const AppTextarea = React.forwardRef<
         )}
         {...props}
       />
-      {error && <p className="text-xs font-medium text-destructive">{error}</p>}
+      {error && <p className="text-destructive text-xs font-medium">{error}</p>}
     </div>
   );
 });

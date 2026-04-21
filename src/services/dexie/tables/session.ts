@@ -19,7 +19,10 @@ export const sessionsTable = {
   getActiveSession: (): Promise<Session | null> => {
     return manageAsyncOperation(
       async () => {
-        const session = await db.table(DB_TABLES.SESSIONS).toCollection().first();
+        const session = await db
+          .table(DB_TABLES.SESSIONS)
+          .toCollection()
+          .first();
         return session || null;
       },
       () => {

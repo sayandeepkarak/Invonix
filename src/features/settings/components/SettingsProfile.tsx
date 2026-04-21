@@ -3,9 +3,13 @@
 import { useProfile } from "@/features/settings/hooks/useProfile";
 import { AppButton, AppInput, AppCard } from "@/components/wrapper";
 
-export function SettingsProfile() {
+export default function SettingsProfile() {
   const { form, isLoading, onSubmit } = useProfile();
-  const { register, handleSubmit, formState: { isDirty, errors } } = form;
+  const {
+    register,
+    handleSubmit,
+    formState: { isDirty, errors },
+  } = form;
 
   return (
     <AppCard

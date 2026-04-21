@@ -5,14 +5,14 @@ import { cn } from "@/lib/utils";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground p-4">
-      <div className="flex flex-col items-center space-y-6 text-center max-w-md">
-        <div className="rounded-full bg-muted p-6">
-          <FileQuestion className="h-16 w-16 text-muted-foreground" />
+    <div className="bg-background text-foreground flex min-h-screen flex-col items-center justify-center p-4">
+      <div className="flex max-w-md flex-col items-center space-y-6 text-center">
+        <div className="bg-muted rounded-full p-6">
+          <FileQuestion className="text-muted-foreground h-16 w-16" />
         </div>
 
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl font-outfit">
+          <h1 className="font-outfit text-4xl font-bold tracking-tighter sm:text-5xl">
             404 - Not Found
           </h1>
           <p className="text-muted-foreground text-lg">
@@ -21,12 +21,12 @@ export default function NotFound() {
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 w-full">
+        <div className="flex w-full flex-col gap-3 sm:flex-row">
           <Link
             href="/"
             className={cn(
               buttonVariants({ variant: "default" }),
-              "flex-1 justify-center h-10",
+              "h-10 flex-1 justify-center",
             )}
           >
             Go Home
@@ -35,7 +35,7 @@ export default function NotFound() {
             href="/dashboard"
             className={cn(
               buttonVariants({ variant: "outline" }),
-              "flex-1 justify-center h-10",
+              "h-10 flex-1 justify-center",
             )}
           >
             Dashboard

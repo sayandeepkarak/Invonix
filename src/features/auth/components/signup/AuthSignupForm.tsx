@@ -35,8 +35,8 @@ export function AuthSignupForm(): React.JSX.Element {
       className="w-full max-w-md"
     >
       {error && (
-        <div className="rounded-md bg-destructive/10 p-3 mb-4">
-          <p className="text-sm text-destructive">{error}</p>
+        <div className="bg-destructive/10 mb-4 rounded-md p-3">
+          <p className="text-destructive text-sm">{error}</p>
         </div>
       )}
 
@@ -67,7 +67,7 @@ export function AuthSignupForm(): React.JSX.Element {
       )}
 
       {currentStep !== SIGNUP_STEPS.COMPLETE && (
-        <p className="text-center text-sm text-muted-foreground mt-4">
+        <p className="text-muted-foreground mt-4 text-center text-sm">
           Already have an account?{" "}
           <Link
             href="/auth/signin"

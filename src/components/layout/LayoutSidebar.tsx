@@ -35,13 +35,13 @@ import { logoutRequest } from "@/features/auth/store";
 
 const navItems = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { title: "Inventory", href: "/dashboard/inventory", icon: Package },
-  { title: "Orders", href: "/dashboard/orders", icon: ShoppingCart },
-  { title: "Delivery Agents", href: "/dashboard/agents", icon: Truck },
+  { title: "Inventory", href: "/inventory", icon: Package },
+  { title: "Orders", href: "/orders", icon: ShoppingCart },
+  { title: "Delivery Agents", href: "/agents", icon: Truck },
 ];
 
 const userMenuItems = [
-  { title: "Settings", href: "/dashboard/settings", icon: Settings },
+  { title: "Settings", href: "/settings", icon: Settings },
 ];
 
 export function LayoutSidebar() {
@@ -67,7 +67,7 @@ export function LayoutSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="flex h-12 items-center px-4">
         <div className="flex items-center gap-2 font-bold">
-          <div className="flex h-6 w-6 items-center justify-center rounded bg-primary text-primary-foreground">
+          <div className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded">
             <LayoutDashboard className="h-4 w-4" />
           </div>
           <span className="truncate group-data-[collapsible=icon]:hidden">
@@ -106,7 +106,7 @@ export function LayoutSidebar() {
                       className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                     >
                       <Avatar className="h-8 w-8 rounded-lg">
-                        <AvatarFallback className="rounded-lg bg-primary/10 text-primary">
+                        <AvatarFallback className="bg-primary/10 text-primary rounded-lg">
                           {initials}
                         </AvatarFallback>
                       </Avatar>
@@ -114,7 +114,7 @@ export function LayoutSidebar() {
                         <span className="truncate font-semibold">
                           {user?.name || "User"}
                         </span>
-                        <span className="truncate text-xs text-muted-foreground">
+                        <span className="text-muted-foreground truncate text-xs">
                           {user?.email || "user@example.com"}
                         </span>
                       </div>
@@ -133,7 +133,7 @@ export function LayoutSidebar() {
                     <DropdownMenuItem key={item.href} className="p-0">
                       <Link
                         href={item.href}
-                        className="flex items-center gap-2 w-full px-1.5 py-1"
+                        className="flex w-full items-center gap-2 px-1.5 py-1"
                       >
                         <item.icon className="h-4 w-4" />
                         {item.title}
@@ -144,7 +144,7 @@ export function LayoutSidebar() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={handleLogout}
-                  className="gap-2 text-destructive"
+                  className="text-destructive gap-2"
                 >
                   <LogOut className="h-4 w-4" />
                   <span>Logout</span>

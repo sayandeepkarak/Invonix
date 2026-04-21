@@ -1,22 +1,17 @@
-import { useState, useEffect, useCallback } from "react";
-import { debounce } from "lodash";
+import { useState, useEffect } from "react";
 
 export function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
-  const debouncedSetter = useCallback(
-    debounce((newValue: T) => {
-      setDebouncedValue(newValue);
-    }, delay),
-    [delay]
-  );
-
   useEffect(() => {
-    debouncedSetter(value);
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
     return () => {
-      debouncedSetter.cancel();
+      clearTimeout(handler);
     };
-  }, [value, debouncedSetter]);
+  }, [value, delay]);
 
   return debouncedValue;
 }

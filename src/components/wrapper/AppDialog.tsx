@@ -46,11 +46,17 @@ export function AppDialog({
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
         <div className="pt-4">{children}</div>
-        {footer && (
+        {footer === null ? null : footer ? (
+          <DialogFooter className="flex-row items-center justify-between">
+            {footer}
+          </DialogFooter>
+        ) : (
           <DialogFooter>
             <AppButton
               variant="outline"
-              onClick={() => onOpenChange(false)}
+              onClick={() => {
+                onOpenChange(false);
+              }}
               disabled={isLoading}
             >
               {cancelLabel}

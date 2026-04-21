@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState } from "react";
 import type { Product } from "@/features/inventory/types";
 import type { OrderItem } from "@/features/orders/types";
 
@@ -13,30 +13,30 @@ interface UseAddOrderProps {
   onClose: () => void;
 }
 
-export function useAddOrder({ products, onAddOrder, onClose }: UseAddOrderProps) {
+export function useAddOrder({
+  products,
+  onAddOrder,
+  onClose,
+}: UseAddOrderProps) {
   const [selectedItems, setSelectedItems] = useState<AddOrderItem[]>([]);
   const [currentProductId, setCurrentProductId] = useState<string>("");
 
-  const availableProducts = useMemo(() => {
-    return products.filter((p) => {
-      return (
-        !selectedItems.find((item) => {
-          return item.product.id === p.id;
-        }) && p.stock > 0
-      );
-    });
-  }, [products, selectedItems]);
+  const availableProducts = products.filter((p) => {
+    return (
+      !selectedItems.find((item) => {
+        return item.product.id === p.id;
+      }) && p.stock > 0
+    );
+  });
 
-  const productOptions = useMemo(() => {
-    return availableProducts.map((p) => {
-      return {
-        label: `${p.name} (${p.stock} in stock)`,
-        value: p.id,
-      };
-    });
-  }, [availableProducts]);
+  const productOptions = availableProducts.map((p) => {
+    return {
+      label: `${p.name} (${p.stock} in stock)`,
+      value: p.id,
+    };
+  });
 
-  const handleAddItem = useCallback(() => {
+  const handleAddItem = () => {
     const product = products.find((p) => {
       return p.id === currentProductId;
     });
@@ -46,9 +46,9 @@ export function useAddOrder({ products, onAddOrder, onClose }: UseAddOrderProps)
       });
       setCurrentProductId("");
     }
-  }, [currentProductId, products]);
+  };
 
-  const updateQuantity = useCallback((productId: string, delta: number) => {
+  const updateQuantity = (productId: string, delta: number) => {
     setSelectedItems((prev) => {
       return prev.map((item) => {
         if (item.product.id === productId) {
@@ -61,17 +61,17 @@ export function useAddOrder({ products, onAddOrder, onClose }: UseAddOrderProps)
         return item;
       });
     });
-  }, []);
+  };
 
-  const removeItem = useCallback((productId: string) => {
+  const removeItem = (productId: string) => {
     setSelectedItems((prev) => {
       return prev.filter((item) => {
         return item.product.id !== productId;
       });
     });
-  }, []);
+  };
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = () => {
     if (selectedItems.length > 0) {
       const mappedItems: OrderItem[] = selectedItems.map((item) => {
         return {
@@ -85,13 +85,11 @@ export function useAddOrder({ products, onAddOrder, onClose }: UseAddOrderProps)
       setSelectedItems([]);
       onClose();
     }
-  }, [selectedItems, onAddOrder, onClose]);
+  };
 
-  const total = useMemo(() => {
-    return selectedItems.reduce((sum, item) => {
-      return sum + item.product.salePrice * item.quantity;
-    }, 0);
-  }, [selectedItems]);
+  const total = selectedItems.reduce((sum, item) => {
+    return sum + item.product.salePrice * item.quantity;
+  }, 0);
 
   return {
     selectedItems,

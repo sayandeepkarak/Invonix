@@ -35,10 +35,10 @@ export function InventoryStepPricingStock({
           id="price"
           type="number"
           step="0.01"
-          {...register("price", { 
+          {...register("price", {
             required: "Price is required",
             valueAsNumber: true,
-            min: { value: 0, message: "Price must be positive" }
+            min: { value: 0, message: "Price must be positive" },
           })}
           error={errors.price?.message}
         />
@@ -47,10 +47,10 @@ export function InventoryStepPricingStock({
           id="costPrice"
           type="number"
           step="0.01"
-          {...register("costPrice", { 
+          {...register("costPrice", {
             required: "Cost price is required",
             valueAsNumber: true,
-            min: { value: 0, message: "Cost price must be positive" }
+            min: { value: 0, message: "Cost price must be positive" },
           })}
           error={errors.costPrice?.message}
         />
@@ -59,10 +59,10 @@ export function InventoryStepPricingStock({
           id="salePrice"
           type="number"
           step="0.01"
-          {...register("salePrice", { 
+          {...register("salePrice", {
             required: "Sale price is required",
             valueAsNumber: true,
-            min: { value: 0, message: "Sale price must be positive" }
+            min: { value: 0, message: "Sale price must be positive" },
           })}
           error={errors.salePrice?.message}
         />
@@ -73,10 +73,10 @@ export function InventoryStepPricingStock({
           label="Initial Stock *"
           id="stock"
           type="number"
-          {...register("stock", { 
+          {...register("stock", {
             required: "Stock is required",
             valueAsNumber: true,
-            min: { value: 0, message: "Stock must be positive" }
+            min: { value: 0, message: "Stock must be positive" },
           })}
           error={errors.stock?.message}
         />
@@ -84,10 +84,10 @@ export function InventoryStepPricingStock({
           label="Low Stock Threshold *"
           id="lowStockThreshold"
           type="number"
-          {...register("lowStockThreshold", { 
+          {...register("lowStockThreshold", {
             required: "Threshold is required",
             valueAsNumber: true,
-            min: { value: 0, message: "Threshold must be positive" }
+            min: { value: 0, message: "Threshold must be positive" },
           })}
           error={errors.lowStockThreshold?.message}
         />

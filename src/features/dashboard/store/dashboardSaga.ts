@@ -13,7 +13,6 @@ import type { Product } from "@/features/inventory/types";
 function* handleFetchAnalytics() {
   try {
     const orders: Order[] = yield call(ordersTable.getAll);
-    const products: Product[] = yield call(productsTable.getAll);
 
     const revenueData = [
       { month: "Jan", amount: 2400 },
@@ -39,26 +38,10 @@ function* handleFetchAnalytics() {
       }),
     );
 
-    const recentActivity = [
-      {
-        id: "1",
-        type: "order",
-        message: "New order #ORD-001 placed",
-        timestamp: "2 minutes ago",
-      },
-      {
-        id: "2",
-        type: "delivery",
-        message: "Order #ORD-002 out for delivery",
-        timestamp: "1 hour ago",
-      },
-    ];
-
     yield put(
       setAnalyticsData({
         revenueData,
         statusDistribution,
-        recentActivity,
       }),
     );
   } catch (error) {

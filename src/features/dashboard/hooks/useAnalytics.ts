@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchAnalyticsRequest } from "@/features/dashboard/store/dashboardSlice";
 import { fetchOrdersRequest } from "@/features/orders/store/orderSlice";
@@ -7,14 +7,11 @@ import { ORDER_STATUS } from "@/features/orders/const";
 
 export function useAnalytics() {
   const dispatch = useAppDispatch();
-  const {
-    revenueData,
-    statusDistribution,
-    recentActivity,
-    isLoading,
-  } = useAppSelector((state) => {
-    return state.dashboard;
-  });
+  const { revenueData, statusDistribution, isLoading } = useAppSelector(
+    (state) => {
+      return state.dashboard;
+    },
+  );
   const { orders } = useAppSelector((state) => {
     return state.orders;
   });
@@ -28,28 +25,25 @@ export function useAnalytics() {
     dispatch(fetchProductsRequest());
   }, [dispatch]);
 
-  const stats = useMemo(() => {
-    const totalOrders = (orders || []).length;
-    const pendingDeliveries = (orders || []).filter((o) => {
-      return ([ORDER_STATUS.PENDING, ORDER_STATUS.CONFIRMED] as string[]).includes(
-        o.status,
-      );
-    }).length;
-    const activeProducts = (products || []).filter((p) => {
-      return p.isActive;
-    }).length;
+  const totalOrders = (orders || []).length;
+  const pendingDeliveries = (orders || []).filter((o) => {
+    return (
+      [ORDER_STATUS.PENDING, ORDER_STATUS.CONFIRMED] as string[]
+    ).includes(o.status);
+  }).length;
+  const activeProducts = (products || []).filter((p) => {
+    return p.isActive;
+  }).length;
 
-    return {
-      totalOrders,
-      activeProducts,
-      pendingDeliveries,
-    };
-  }, [orders, products]);
+  const stats = {
+    totalOrders,
+    activeProducts,
+    pendingDeliveries,
+  };
 
   return {
     revenueData,
     statusDistribution,
-    recentActivity,
     stats,
     isLoading,
   };

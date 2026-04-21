@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -8,11 +8,9 @@ import type { LoginPayload } from "@/features/auth/types";
 export function useSignin() {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { isLoading, error, isAuthenticated } = useAppSelector(
-    (state) => {
-      return state.auth;
-    },
-  );
+  const { isLoading, error, isAuthenticated } = useAppSelector((state) => {
+    return state.auth;
+  });
 
   const form = useForm<LoginPayload>();
 
@@ -22,9 +20,9 @@ export function useSignin() {
     }
   }, [isAuthenticated, router]);
 
-  const onSubmit = useCallback((data: LoginPayload) => {
+  const onSubmit = (data: LoginPayload) => {
     dispatch(loginRequest(data));
-  }, [dispatch]);
+  };
 
   return {
     form,

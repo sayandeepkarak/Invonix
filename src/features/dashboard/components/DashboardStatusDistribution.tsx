@@ -19,7 +19,7 @@ interface DashboardStatusDistributionProps {
 
 const COLORS = ["#3b82f6", "#8b5cf6", "#f59e0b", "#10b981", "#ef4444"];
 
-export function DashboardStatusDistribution({
+export default function DashboardStatusDistribution({
   data,
   className,
 }: DashboardStatusDistributionProps) {
@@ -58,7 +58,12 @@ export function DashboardStatusDistribution({
               })}
             </Pie>
             <Tooltip
-              content={<DashboardChartTooltip labelKey="status" valueSuffix=" Orders" />}
+              content={
+                <DashboardChartTooltip
+                  labelKey="status"
+                  valueSuffix=" Orders"
+                />
+              }
             />
             <Legend verticalAlign="bottom" height={36} iconType="circle" />
           </PieChart>

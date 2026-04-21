@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useDebounce } from "@/hooks/use-debounce";
 import {
@@ -27,25 +27,25 @@ export function useInventory() {
     dispatch(fetchProductsRequest());
   }, [dispatch]);
 
-  const handleAddProduct = useCallback(() => {
+  const handleAddProduct = () => {
     return dispatch(openDialog(null));
-  }, [dispatch]);
+  };
 
-  const handleEdit = useCallback((product: Product) => {
+  const handleEdit = (product: Product) => {
     return dispatch(openDialog(product));
-  }, [dispatch]);
+  };
 
-  const handleDelete = useCallback((product: Product) => {
+  const handleDelete = (product: Product) => {
     return setDeleteTarget(product);
-  }, []);
+  };
 
-  const handleConfirmDelete = useCallback(() => {
+  const handleConfirmDelete = () => {
     if (!deleteTarget) return;
     dispatch(deleteProductRequest(deleteTarget.id));
     setDeleteTarget(null);
-  }, [dispatch, deleteTarget]);
+  };
 
-  const handleDialogSubmit = useCallback((data: InventoryFormValues) => {
+  const handleDialogSubmit = (data: InventoryFormValues) => {
     const tags = data.tags
       ? data.tags
           .split(",")
@@ -73,11 +73,11 @@ export function useInventory() {
         }),
       );
     }
-  }, [dispatch, isEditMode, selectedProduct]);
+  };
 
-  const handleCloseDialog = useCallback(() => {
+  const handleCloseDialog = () => {
     return dispatch(closeDialog());
-  }, [dispatch]);
+  };
 
   return {
     products,

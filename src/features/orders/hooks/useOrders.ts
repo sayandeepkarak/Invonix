@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useDebounce } from "@/hooks/use-debounce";
 import {
@@ -37,83 +37,69 @@ export function useOrders() {
     dispatch(fetchProductsRequest());
   }, [dispatch]);
 
-  const filteredOrders = useMemo(() => {
-    return orders.filter((order) => {
-      const searchStr = debouncedSearchQuery.toLowerCase();
-      const userName = order.user?.name?.toLowerCase() || "";
-      const userEmail = order.user?.email?.toLowerCase() || "";
-      const orderId = order.id.toLowerCase();
+  const filteredOrders = orders.filter((order) => {
+    const searchStr = debouncedSearchQuery.toLowerCase();
+    const userName = order.user?.name?.toLowerCase() || "";
+    const userEmail = order.user?.email?.toLowerCase() || "";
+    const orderId = order.id.toLowerCase();
 
-      const matchesSearch =
-        userName.includes(searchStr) ||
-        userEmail.includes(searchStr) ||
-        orderId.includes(searchStr);
+    const matchesSearch =
+      userName.includes(searchStr) ||
+      userEmail.includes(searchStr) ||
+      orderId.includes(searchStr);
 
-      const matchesStatus =
-        statusFilter === APP_CONSTANTS.FILTER_ALL ||
-        order.status === statusFilter;
+    const matchesStatus =
+      statusFilter === APP_CONSTANTS.FILTER_ALL ||
+      order.status === statusFilter;
 
-      return matchesSearch && matchesStatus;
-    });
-  }, [orders, debouncedSearchQuery, statusFilter]);
+    return matchesSearch && matchesStatus;
+  });
 
-  const handleUpdateStatus = useCallback(
-    (orderId: string, status: OrderStatus) => {
-      dispatch(updateOrderStatusRequest({ orderId, status }));
-    },
-    [dispatch],
-  );
+  const handleUpdateStatus = (orderId: string, status: OrderStatus) => {
+    dispatch(updateOrderStatusRequest({ orderId, status }));
+  };
 
-  const handleAssignClick = useCallback((order: Order) => {
+  const handleAssignClick = (order: Order) => {
     setSelectedOrder(order);
     setIsAssignDialogOpen(true);
-  }, []);
+  };
 
-  const handleAssignAgent = useCallback(
-    (agentId: string) => {
-      if (selectedOrder) {
-        dispatch(assignOrderRequest({ orderId: selectedOrder.id, agentId }));
-        setIsAssignDialogOpen(false);
-        setSelectedOrder(null);
-      }
-    },
-    [dispatch, selectedOrder],
-  );
+  const handleAssignAgent = (agentId: string) => {
+    if (selectedOrder) {
+      dispatch(assignOrderRequest({ orderId: selectedOrder.id, agentId }));
+      setIsAssignDialogOpen(false);
+      setSelectedOrder(null);
+    }
+  };
 
-  const handleAddOrder = useCallback(
-    (items: OrderItem[]) => {
-      const totalAmount = items.reduce(
-        (sum, item) => {
-          return sum + item.price * item.quantity;
-        },
-        0,
-      );
+  const handleAddOrder = (items: OrderItem[]) => {
+    const totalAmount = items.reduce((sum, item) => {
+      return sum + item.price * item.quantity;
+    }, 0);
 
-      const newOrder: Order = {
-        id: Math.random().toString(36).substring(2, 10).toUpperCase(),
-        userId: APP_CONSTANTS.GUEST_USER,
-        user: {
-          id: APP_CONSTANTS.GUEST_USER,
-          name: "Walk-in Customer",
-          email: "customer@invonix.com",
-          phone: "+123456789",
-          businessName: "Guest",
-          businessType: "Retail",
-          isVerified: true,
-          createdAt: new Date().toISOString(),
-        },
-        items,
-        totalAmount,
-        status: ORDER_STATUS.PENDING,
+    const newOrder: Order = {
+      id: Math.random().toString(36).substring(2, 10).toUpperCase(),
+      userId: APP_CONSTANTS.GUEST_USER,
+      user: {
+        id: APP_CONSTANTS.GUEST_USER,
+        name: "Walk-in Customer",
+        email: "customer@invonix.com",
+        phone: "+123456789",
+        businessName: "Guest",
+        businessType: "Retail",
+        isVerified: true,
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
+      },
+      items,
+      totalAmount,
+      status: ORDER_STATUS.PENDING,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-      dispatch(createOrderRequest(newOrder));
-      setIsAddOrderOpen(false);
-    },
-    [dispatch],
-  );
+    dispatch(createOrderRequest(newOrder));
+    setIsAddOrderOpen(false);
+  };
 
   return {
     orders: filteredOrders,

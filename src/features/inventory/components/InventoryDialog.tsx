@@ -1,5 +1,5 @@
 import { useInventoryForm } from "@/features/inventory/hooks/useInventoryForm";
-import { AppDialog } from "@/components/wrapper";
+import { AppDialog, AppStepper } from "@/components/wrapper";
 import { INVENTORY_STEPS } from "@/features/inventory/const";
 import type { Product } from "@/features/inventory/types";
 import { InventoryFormValues } from "@/features/inventory/schema";
@@ -16,7 +16,7 @@ interface InventoryDialogProps {
   onSubmit: (data: InventoryFormValues) => void;
 }
 
-export function InventoryDialog({
+export default function InventoryDialog({
   open,
   isEdit,
   product,
@@ -31,6 +31,9 @@ export function InventoryDialog({
       product,
       onSubmit,
     });
+
+  const steps = Object.values(INVENTORY_STEPS);
+  const currentStepIndex = steps.indexOf(currentStep);
 
   const stepTitles: Record<string, string> = {
     [INVENTORY_STEPS.BASIC_INFO]: "Basic Information",
@@ -50,33 +53,35 @@ export function InventoryDialog({
       maxWidth="sm:max-w-[500px]"
       footer={null}
     >
-      <div className="pt-2">
-        {currentStep === INVENTORY_STEPS.BASIC_INFO && (
-          <InventoryStepBasicInfo
-            onNext={(data) => handleNext(data, INVENTORY_STEPS.PRICING_STOCK)}
-            onClose={onClose}
-            initialData={formData}
-          />
-        )}
+      <AppStepper steps={steps} currentStep={currentStepIndex}>
+        <div className="pt-2">
+          {currentStep === INVENTORY_STEPS.BASIC_INFO && (
+            <InventoryStepBasicInfo
+              onNext={(data) => handleNext(data, INVENTORY_STEPS.PRICING_STOCK)}
+              onClose={onClose}
+              initialData={formData}
+            />
+          )}
 
-        {currentStep === INVENTORY_STEPS.PRICING_STOCK && (
-          <InventoryStepPricingStock
-            onNext={(data) => handleNext(data, INVENTORY_STEPS.TAGS)}
-            onBack={() => handleBack(INVENTORY_STEPS.BASIC_INFO)}
-            initialData={formData}
-          />
-        )}
+          {currentStep === INVENTORY_STEPS.PRICING_STOCK && (
+            <InventoryStepPricingStock
+              onNext={(data) => handleNext(data, INVENTORY_STEPS.TAGS)}
+              onBack={() => handleBack(INVENTORY_STEPS.BASIC_INFO)}
+              initialData={formData}
+            />
+          )}
 
-        {currentStep === INVENTORY_STEPS.TAGS && (
-          <InventoryStepTags
-            onSubmit={handleFinalSubmit}
-            onBack={() => handleBack(INVENTORY_STEPS.PRICING_STOCK)}
-            initialData={formData}
-            isLoading={isLoading}
-            isEdit={isEdit}
-          />
-        )}
-      </div>
+          {currentStep === INVENTORY_STEPS.TAGS && (
+            <InventoryStepTags
+              onSubmit={handleFinalSubmit}
+              onBack={() => handleBack(INVENTORY_STEPS.PRICING_STOCK)}
+              initialData={formData}
+              isLoading={isLoading}
+              isEdit={isEdit}
+            />
+          )}
+        </div>
+      </AppStepper>
     </AppDialog>
   );
 }

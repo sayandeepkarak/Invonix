@@ -51,7 +51,10 @@ export function AuthSignupStepThree({
         options={BUSINESS_TYPES}
         defaultValue={BUSINESS_TYPE.RETAIL}
         onChange={(val) => {
-          setValue("businessType", val as SignupStepThreeFormValues["businessType"]);
+          setValue(
+            "businessType",
+            val as SignupStepThreeFormValues["businessType"],
+          );
         }}
         error={errors.businessType?.message}
       />

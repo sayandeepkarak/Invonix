@@ -62,9 +62,11 @@ export function AppSelect({
           )}
         >
           <SelectValue placeholder={placeholder}>
-            {options.find((o) => {
-              return o.value === value;
-            })?.label}
+            {
+              options.find((o) => {
+                return o.value === value;
+              })?.label
+            }
           </SelectValue>
         </SelectTrigger>
         <SelectContent>
@@ -77,7 +79,7 @@ export function AppSelect({
           })}
         </SelectContent>
       </Select>
-      {error && <p className="text-xs font-medium text-destructive">{error}</p>}
+      {error && <p className="text-destructive text-xs font-medium">{error}</p>}
     </div>
   );
 }

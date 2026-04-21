@@ -47,14 +47,14 @@ export function AppTable<T extends { id: string | number }>({
   const totalHeight = virtualizer.getTotalSize();
 
   return (
-    <div className={cn("rounded-md border bg-card overflow-hidden", className)}>
+    <div className={cn("bg-card overflow-hidden rounded-md border", className)}>
       <div
         ref={parentRef}
-        className="overflow-auto relative"
+        className="relative overflow-auto"
         style={{ maxHeight }}
       >
         <Table className="relative">
-          <TableHeader className="sticky top-0 z-20 bg-card shadow-sm">
+          <TableHeader className="bg-card sticky top-0 z-20 shadow-sm">
             <TableRow className="bg-muted/50 border-b">
               {columns.map((column) => {
                 return (
@@ -101,14 +101,15 @@ export function AppTable<T extends { id: string | number }>({
                           >
                             {column.render
                               ? column.render(item)
-                              : (item[column.key as keyof T] as React.ReactNode)}
+                              : (item[
+                                  column.key as keyof T
+                                ] as React.ReactNode)}
                           </TableCell>
                         );
                       })}
                     </TableRow>
                   );
                 })}
-                {/* Spacer to push content up */}
                 {virtualRows.length > 0 && (
                   <tr
                     style={{

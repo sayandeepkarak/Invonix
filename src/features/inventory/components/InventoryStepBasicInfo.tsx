@@ -1,7 +1,12 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { AppInput, AppSelect, AppTextarea, AppButton } from "@/components/wrapper";
+import {
+  AppInput,
+  AppSelect,
+  AppTextarea,
+  AppButton,
+} from "@/components/wrapper";
 import { INVENTORY_CATEGORY_OPTIONS } from "@/features/inventory/const";
 import { InventoryFormValues } from "@/features/inventory/schema";
 

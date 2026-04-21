@@ -14,7 +14,7 @@ interface AddOrderDialogProps {
   isLoading: boolean;
 }
 
-export function AddOrderDialog({
+export default function AddOrderDialog({
   open,
   onClose,
   products,
@@ -40,7 +40,7 @@ export function AddOrderDialog({
       title="Create New Order"
       maxWidth="sm:max-w-[500px]"
       footer={
-        <div className="flex justify-between items-center w-full">
+        <>
           <div className="text-lg font-bold" suppressHydrationWarning>
             Total: ${total.toFixed(2)}
           </div>
@@ -56,11 +56,11 @@ export function AddOrderDialog({
               Add Order
             </AppButton>
           </div>
-        </div>
+        </>
       }
     >
       <div className="space-y-6">
-        <div className="flex gap-2 items-end">
+        <div className="flex items-end gap-2">
           <div className="flex-1">
             <AppSelect
               label="Select Product"
@@ -75,10 +75,10 @@ export function AddOrderDialog({
           </AppButton>
         </div>
 
-        <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
-          {!selectedItems.length  ? (
-            <div className="text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg">
-              <ShoppingCart className="h-8 w-8 mx-auto mb-2 opacity-20" />
+        <div className="max-h-[300px] space-y-4 overflow-y-auto pr-2">
+          {!selectedItems.length ? (
+            <div className="text-muted-foreground rounded-lg border-2 border-dashed py-8 text-center">
+              <ShoppingCart className="mx-auto mb-2 h-8 w-8 opacity-20" />
               <p>No items added yet</p>
             </div>
           ) : (
@@ -86,23 +86,23 @@ export function AddOrderDialog({
               return (
                 <div
                   key={item.product.id}
-                  className="flex items-center justify-between p-3 rounded-lg border"
+                  className="flex items-center justify-between rounded-lg border p-3"
                 >
                   <div className="flex flex-col">
                     <span className="font-medium">{item.product.name}</span>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-muted-foreground text-xs">
                       Available Stock: {item.product.stock}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center border rounded-md">
+                    <div className="flex items-center rounded-md border">
                       <button
                         type="button"
                         onClick={() => {
                           return updateQuantity(item.product.id, -1);
                         }}
-                        className="p-1 hover:bg-muted disabled:opacity-50"
+                        className="hover:bg-muted p-1 disabled:opacity-50"
                         disabled={item.quantity <= 1}
                       >
                         <Minus className="h-4 w-4" />
@@ -115,13 +115,13 @@ export function AddOrderDialog({
                         onClick={() => {
                           return updateQuantity(item.product.id, 1);
                         }}
-                        className="p-1 hover:bg-muted disabled:opacity-50"
+                        className="hover:bg-muted p-1 disabled:opacity-50"
                         disabled={item.quantity >= item.product.stock}
                       >
                         <Plus className="h-4 w-4" />
                       </button>
                     </div>
-                    <span className="text-[10px] text-muted-foreground w-12">
+                    <span className="text-muted-foreground w-12 text-[10px]">
                       (Max: {item.product.stock})
                     </span>
                     <button

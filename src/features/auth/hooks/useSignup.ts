@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { signupRequest } from "@/features/auth/store";
 import { SIGNUP_STEPS, SIGNUP_STEP_LABELS } from "@/features/auth/const";
@@ -28,9 +28,7 @@ export function useSignup() {
     password: "",
   });
 
-  const stepIndex = useMemo(() => {
-    return STEP_ORDER.indexOf(currentStep);
-  }, [currentStep]);
+  const stepIndex = STEP_ORDER.indexOf(currentStep);
 
   useEffect(() => {
     if (isAuthenticated && currentStep === SIGNUP_STEPS.BUSINESS_DETAILS) {
@@ -38,26 +36,26 @@ export function useSignup() {
     }
   }, [isAuthenticated, currentStep]);
 
-  const handleStepOneComplete = useCallback((data: StepOneData): void => {
+  const handleStepOneComplete = (data: StepOneData): void => {
     setStepOneData(data);
     setCurrentStep(SIGNUP_STEPS.EMAIL_VERIFICATION);
-  }, []);
+  };
 
-  const handleStepThreeComplete = useCallback((data: StepThreeData): void => {
+  const handleStepThreeComplete = (data: StepThreeData): void => {
     dispatch(signupRequest({ ...stepOneData, ...data }));
-  }, [dispatch, stepOneData]);
+  };
 
-  const handleEmailVerified = useCallback((): void => {
+  const handleEmailVerified = (): void => {
     setCurrentStep(SIGNUP_STEPS.BUSINESS_DETAILS);
-  }, []);
+  };
 
-  const handleBackToBasic = useCallback((): void => {
+  const handleBackToBasic = (): void => {
     setCurrentStep(SIGNUP_STEPS.BASIC_INFO);
-  }, []);
+  };
 
-  const handleBackToEmail = useCallback((): void => {
+  const handleBackToEmail = (): void => {
     setCurrentStep(SIGNUP_STEPS.EMAIL_VERIFICATION);
-  }, []);
+  };
 
   return {
     currentStep,

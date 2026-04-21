@@ -3,14 +3,19 @@
 import { AppCard } from "@/components/wrapper";
 import { Badge } from "@/components/ui/badge";
 import { Phone, Mail, Package } from "lucide-react";
-import type { DeliveryAgent, AgentStatus } from "@/features/orders/types/agents";
+import type {
+  DeliveryAgent,
+  AgentStatus,
+} from "@/features/orders/types/agents";
 import { AGENT_STATUS, AGENT_STATUS_LABELS } from "@/features/orders/const";
+import { cn } from "@/lib/utils";
 
 interface AgentCardProps {
   agent: DeliveryAgent;
+  className?: string;
 }
 
-export function AgentCard({ agent }: AgentCardProps) {
+export default function AgentCard({ agent, className }: AgentCardProps) {
   const getStatusColor = (status: AgentStatus) => {
     switch (status) {
       case AGENT_STATUS.AVAILABLE:
@@ -25,20 +30,19 @@ export function AgentCard({ agent }: AgentCardProps) {
   };
 
   return (
-    <AppCard>
-      <div className="flex items-start justify-between mb-4">
+    <AppCard
+      className={cn("transition-all duration-200 hover:shadow-lg", className)}
+    >
+      <div className="mb-4 flex items-start justify-between">
         <div>
           <h3 className="font-bold">{agent.name}</h3>
-          <Badge
-            variant="outline"
-            className={getStatusColor(agent.status)}
-          >
+          <Badge variant="outline" className={getStatusColor(agent.status)}>
             {AGENT_STATUS_LABELS[agent.status]}
           </Badge>
         </div>
       </div>
 
-      <div className="space-y-2 text-sm text-muted-foreground">
+      <div className="text-muted-foreground space-y-2 text-sm">
         <div className="flex items-center gap-2">
           <Mail className="h-4 w-4" /> {agent.email}
         </div>
@@ -48,15 +52,15 @@ export function AgentCard({ agent }: AgentCardProps) {
       </div>
 
       {agent.order && (
-        <div className="mt-4 p-3 bg-muted/50 rounded-md space-y-2 border">
-          <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground uppercase">
+        <div className="bg-muted/50 mt-4 space-y-2 rounded-md border p-3">
+          <div className="text-muted-foreground flex items-center gap-2 text-xs font-semibold uppercase">
             <Package className="h-3 w-3" /> Active Order
           </div>
-          <div className="flex justify-between items-center">
-            <span className="font-mono text-xs text-primary font-bold">
+          <div className="flex items-center justify-between">
+            <span className="text-primary font-mono text-xs font-bold">
               #{agent.order.id.slice(0, 8).toUpperCase()}
             </span>
-            <Badge variant="secondary" className="text-[10px] h-5">
+            <Badge variant="secondary" className="h-5 text-[10px]">
               {agent.order.status}
             </Badge>
           </div>
