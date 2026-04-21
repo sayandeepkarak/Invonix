@@ -9,6 +9,7 @@ import {
   Legend,
 } from "recharts";
 import { AppCard } from "@/components/wrapper";
+import { DashboardChartTooltip } from "./DashboardChartTooltip";
 import { ORDER_STATUS, ORDER_STATUS_LABELS } from "@/features/orders/const";
 
 interface DashboardStatusDistributionProps {
@@ -16,13 +17,7 @@ interface DashboardStatusDistributionProps {
   className?: string;
 }
 
-const COLORS = [
-  "hsl(var(--primary))",
-  "hsl(var(--blue-500))",
-  "hsl(var(--green-500))",
-  "hsl(var(--orange-500))",
-  "hsl(var(--destructive))",
-];
+const COLORS = ["#3b82f6", "#8b5cf6", "#f59e0b", "#10b981", "#ef4444"];
 
 export function DashboardStatusDistribution({
   data,
@@ -39,11 +34,7 @@ export function DashboardStatusDistribution({
         ];
 
   return (
-    <AppCard
-      title="Order Distribution"
-      description="Breakdown of orders by status"
-      className={className}
-    >
+    <AppCard title="Order Distribution" className={className}>
       <div className="h-75 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -64,8 +55,10 @@ export function DashboardStatusDistribution({
                 />
               ))}
             </Pie>
-            <Tooltip />
-            <Legend verticalAlign="bottom" height={36} />
+            <Tooltip
+              content={<DashboardChartTooltip labelKey="status" valueSuffix=" Orders" />}
+            />
+            <Legend verticalAlign="bottom" height={36} iconType="circle" />
           </PieChart>
         </ResponsiveContainer>
       </div>

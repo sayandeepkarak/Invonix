@@ -17,8 +17,8 @@ export function AppCheckbox({
   ref,
   ...props
 }: AppCheckboxProps) {
-  const handleCheckedChange = (checked: boolean, event: any) => {
-    onCheckedChange?.(checked, event);
+  const handleCheckedChange = (checked: boolean, ...args: any[]) => {
+    onCheckedChange?.(checked, args[0]);
     onChange?.(checked);
   };
   return (

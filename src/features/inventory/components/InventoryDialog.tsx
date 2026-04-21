@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useInventoryForm } from "@/features/inventory/hooks/useInventoryForm";
 import {
   AppDialog,
   AppInput,
@@ -11,14 +9,11 @@ import {
   AppButton,
 } from "@/components/wrapper";
 import {
-  InventoryFormValues,
-  InventorySchema,
-} from "@/features/inventory/schema";
-import type { Product } from "@/features/inventory/types";
-import {
   INVENTORY_CATEGORY,
   INVENTORY_CATEGORY_OPTIONS,
 } from "@/features/inventory/const";
+import type { Product } from "@/features/inventory/types";
+import { InventoryFormValues } from "@/features/inventory/schema";
 
 interface InventoryDialogProps {
   open: boolean;
@@ -37,47 +32,16 @@ export function InventoryDialog({
   onClose,
   onSubmit,
 }: InventoryDialogProps) {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm<InventoryFormValues>({
-    resolver: zodResolver(InventorySchema) as any,
-  });
+  const { form, categoryValue, handleCategoryChange, handleFormSubmit } =
+    useInventoryForm({
+      open,
+      isEdit,
+      product,
+      onSubmit,
+      onClose,
+    });
 
-  useEffect(() => {
-    if (open) {
-      if (isEdit && product) {
-        reset({
-          name: product.name,
-          sku: product.sku,
-          category: product.category,
-          price: product.price,
-          costPrice: product.costPrice,
-          salePrice: product.salePrice,
-          stock: product.stock,
-          lowStockThreshold: product.lowStockThreshold,
-          description: product.description || "",
-          tags: product.tags.join(", "),
-        });
-      } else {
-        reset({
-          name: "",
-          sku: "",
-          category: INVENTORY_CATEGORY.ELECTRONICS,
-          price: 0,
-          costPrice: 0,
-          salePrice: 0,
-          stock: 0,
-          lowStockThreshold: 5,
-          description: "",
-          tags: "",
-        });
-      }
-    }
-  }, [open, isEdit, product, reset]);
+  const { register, formState: { errors } } = form;
 
   return (
     <AppDialog
@@ -103,7 +67,7 @@ export function InventoryDialog({
     >
       <form
         id="inventory-form"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleFormSubmit}
         className="space-y-4"
       >
         <div className="grid gap-4">
@@ -126,8 +90,8 @@ export function InventoryDialog({
             <AppSelect
               label="Category"
               options={INVENTORY_CATEGORY_OPTIONS}
-              defaultValue={product?.category || INVENTORY_CATEGORY.ELECTRONICS}
-              onChange={(val) => setValue("category", val)}
+              value={categoryValue}
+              onChange={handleCategoryChange}
             />
           </div>
 

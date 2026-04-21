@@ -40,6 +40,10 @@ const navItems = [
   { title: "Delivery Agents", href: "/dashboard/agents", icon: Truck },
 ];
 
+const userMenuItems = [
+  { title: "Settings", href: "/dashboard/settings", icon: Settings },
+];
+
 export function LayoutSidebar() {
   const pathname = usePathname();
   const { user } = useAppSelector((state) => state.auth);
@@ -74,7 +78,7 @@ export function LayoutSidebar() {
           {navItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <SidebarMenuButton
-                render={(props: any) => <Link {...props} href={item.href} />}
+                render={(props) => <Link {...props} href={item.href} />}
                 isActive={pathname === item.href}
                 tooltip={item.title}
               >
@@ -90,7 +94,7 @@ export function LayoutSidebar() {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger
-                render={(props: any) => (
+                render={(props: React.HTMLAttributes<HTMLElement>) => (
                   <SidebarMenuButton
                     {...props}
                     size="lg"
@@ -119,15 +123,17 @@ export function LayoutSidebar() {
                 sideOffset={4}
               >
                 <DropdownMenuGroup>
-                  <DropdownMenuItem className="p-0">
-                    <Link
-                      href="/dashboard/settings"
-                      className="flex items-center gap-2 w-full px-1.5 py-1"
-                    >
-                      <Settings className="h-4 w-4" />
-                      Settings
-                    </Link>
-                  </DropdownMenuItem>
+                  {userMenuItems.map((item) => (
+                    <DropdownMenuItem key={item.href} className="p-0">
+                      <Link
+                        href={item.href}
+                        className="flex items-center gap-2 w-full px-1.5 py-1"
+                      >
+                        <item.icon className="h-4 w-4" />
+                        {item.title}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem

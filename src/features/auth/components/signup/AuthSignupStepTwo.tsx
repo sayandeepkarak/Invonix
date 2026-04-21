@@ -90,11 +90,6 @@ export function AuthSignupStepTwo({
           Back to Basic Info
         </AppButton>
       </div>
-
-      <p className="text-center text-xs text-muted-foreground">
-        Didn&apos;t receive the code?{" "}
-        <button className="text-primary hover:underline">Resend code</button>
-      </p>
     </div>
   );
 }

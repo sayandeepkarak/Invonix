@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export async function manageAsyncOperation<T>(
   callback: () => Promise<T>,
-  errCallback?: (error: unknown) => any,
+  errCallback?: (error: unknown) => T,
   loadingCallback?: (loading: boolean) => void,
 ): Promise<T | undefined> {
   try {

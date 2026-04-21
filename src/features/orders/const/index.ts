@@ -1,6 +1,8 @@
 import { OrderStatus } from "@/features/orders/types";
 import { AgentStatus } from "@/features/orders/types/agents";
 
+import { APP_CONSTANTS } from "@/constants";
+
 export const ORDER_STATUS = Object.freeze({
   PENDING: "PENDING",
   CONFIRMED: "CONFIRMED",
@@ -20,14 +22,14 @@ export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
 };
 
 export const ORDER_STATUS_OPTIONS = [
-  { label: "All Statuses", value: "ALL" },
+  { label: "All Statuses", value: APP_CONSTANTS.FILTER_ALL },
   ...Object.values(ORDER_STATUS).map((status) => ({
     label: ORDER_STATUS_LABELS[status as OrderStatus],
     value: status,
   })),
 ] as const;
 
-export type OrderStatusFilter = OrderStatus | "ALL";
+export type OrderStatusFilter = OrderStatus | typeof APP_CONSTANTS.FILTER_ALL;
 
 export const AGENT_STATUS = Object.freeze({
   AVAILABLE: "AVAILABLE",

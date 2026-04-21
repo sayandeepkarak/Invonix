@@ -26,7 +26,7 @@ export function LayoutApp({ children }: LayoutAppProps) {
                 <SidebarTrigger className="-ml-1" />
               </div>
               <div className="flex items-center gap-4">
-                <span className="text-xs font-bold text-primary bg-primary/5 px-2 py-1 rounded border border-primary/10">
+                <span className="text-sm font-medium">
                   {user?.businessName || "Invonix"}
                 </span>
               </div>

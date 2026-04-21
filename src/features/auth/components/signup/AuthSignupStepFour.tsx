@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
-import { AppButton } from "@/components/wrapper";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 import type { SignupStepFourProps } from "@/features/auth/types";
 
 export function AuthSignupStepFour({
@@ -25,12 +26,15 @@ export function AuthSignupStepFour({
       </div>
 
       <div className="pt-4">
-        <AppButton
-          render={(props: any) => <Link {...props} href="/dashboard" />}
-          className="w-full"
+        <Link
+          href="/dashboard"
+          className={cn(
+            buttonVariants({ variant: "default" }),
+            "w-full h-10 flex items-center justify-center"
+          )}
         >
           Go to Dashboard
-        </AppButton>
+        </Link>
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { AppCard } from "@/components/wrapper";
+import { DashboardChartTooltip } from "./DashboardChartTooltip";
 
 interface DashboardRevenueChartProps {
   data: { month: string; amount: number }[];
@@ -23,10 +24,9 @@ export function DashboardRevenueChart({
   return (
     <AppCard
       title="Revenue Trend"
-      description="Total sales income over the last 6 months"
       className={className}
     >
-      <div className="h-75 w-full pt-4">
+      <div className="h-80 w-full pt-4">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
             <CartesianGrid
@@ -40,6 +40,7 @@ export function DashboardRevenueChart({
               fontSize={12}
               tickLine={false}
               axisLine={false}
+              dy={10}
             />
             <YAxis
               stroke="hsl(var(--muted-foreground))"
@@ -48,12 +49,17 @@ export function DashboardRevenueChart({
               axisLine={false}
               tickFormatter={(value) => `$${value}`}
             />
-            <Tooltip />
+            <Tooltip
+              cursor={{ fill: "var(--muted)", opacity: 0.1 }}
+              content={<DashboardChartTooltip valuePrefix="$" />}
+            />
             <Bar
               dataKey="amount"
-              fill="hsl(var(--primary))"
-              radius={[4, 4, 0, 0]}
-              barSize={32}
+              fill="var(--chart-primary)"
+              radius={[6, 6, 0, 0]}
+              barSize={24}
+              activeBar={{ fill: "var(--chart-primary)", opacity: 0.8 }}
+              animationDuration={1500}
             />
           </BarChart>
         </ResponsiveContainer>

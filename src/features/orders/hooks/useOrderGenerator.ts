@@ -36,7 +36,7 @@ export function useOrderGenerator() {
         },
       ],
       totalAmount: randomProduct.price * quantity,
-      status: ORDER_STATUS.PENDING as any,
+      status: ORDER_STATUS.PENDING,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };

@@ -28,26 +28,21 @@ export function InventoryTable({
   onDelete,
 }: InventoryTableProps) {
   const filteredProducts = useMemo(() => {
-    return products.filter(
-      (product) =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+    return products
+      .filter((p) => p.isActive)
+      .filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          product.category.toLowerCase().includes(searchQuery.toLowerCase()),
+      );
   }, [products, searchQuery]);
 
   const columns: AppTableColumn<Product>[] = [
     {
       header: "Product",
       key: "name",
-      render: (product) => (
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded bg-muted">
-            <Package className="h-5 w-5 text-muted-foreground" />
-          </div>
-          <span className="font-medium">{product.name}</span>
-        </div>
-      ),
+      render: (product) => <span className="font-medium">{product.name}</span>,
     },
     {
       header: "SKU",
@@ -83,34 +78,30 @@ export function InventoryTable({
       ),
     },
     {
-      header: "",
+      header: "Actions",
       key: "actions",
       className: "text-right",
       render: (product) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={(props: any) => (
-              <AppButton variant="ghost" className="h-8 w-8 p-0" {...props}>
-                <MoreHorizontal className="h-4 w-4" />
-              </AppButton>
-            )}
-          />
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onEdit(product)}>
-              <Edit className="mr-2 h-4 w-4" />
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-destructive"
-              onClick={() => onDelete(product)}
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center justify-end gap-2">
+          <AppButton
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            onClick={() => onEdit(product)}
+            tooltip="Edit product"
+          >
+            <Edit className="h-4 w-4" />
+          </AppButton>
+          <AppButton
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-destructive hover:bg-destructive/10"
+            onClick={() => onDelete(product)}
+            tooltip="Delete product"
+          >
+            <Trash2 className="h-4 w-4" />
+          </AppButton>
+        </div>
       ),
     },
   ];

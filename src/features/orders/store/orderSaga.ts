@@ -11,18 +11,21 @@ import {
   assignOrderRequest,
   createOrderRequest,
 } from "@/features/orders/store/orderSlice";
+import { productsTable } from "@/services/dexie/tables/products";
+import { fetchProductsRequest } from "@/features/inventory/store";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { OrderStatus, Order } from "@/features/orders/types";
 import type { DeliveryAgent } from "@/features/orders/types/agents";
+import type { Product } from "@/features/inventory/types";
 import { ORDER_STATUS, AGENT_STATUS } from "@/features/orders/const";
 
 function* seedData() {
   const existingAgents: DeliveryAgent[] = yield call(agentsTable.getAll);
 
-  if (existingAgents.length === 0) {
+  if ((existingAgents || []).length === 0) {
     const dummyAgents: DeliveryAgent[] = [
       {
-        id: crypto.randomUUID(),
+        id: "agent-1",
         name: "Express Mike",
         email: "mike@delivery.com",
         phone: "555-0101",
@@ -30,7 +33,7 @@ function* seedData() {
         createdAt: new Date().toISOString(),
       },
       {
-        id: crypto.randomUUID(),
+        id: "agent-2",
         name: "Fast Sarah",
         email: "sarah@delivery.com",
         phone: "555-0102",
@@ -38,7 +41,7 @@ function* seedData() {
         createdAt: new Date().toISOString(),
       },
       {
-        id: crypto.randomUUID(),
+        id: "agent-3",
         name: "Quick Dave",
         email: "dave@delivery.com",
         phone: "555-0103",
@@ -55,7 +58,7 @@ function* seedData() {
 function* handleFetchOrders() {
   try {
     const orders: Order[] = yield call(ordersTable.getAll);
-    yield put(setOrders(orders));
+    yield put(setOrders(orders || []));
   } catch (err) {
     yield put(setError(String(err)));
   }
@@ -65,7 +68,7 @@ function* handleFetchAgents() {
   try {
     yield call(seedData);
     const agents: DeliveryAgent[] = yield call(agentsTable.getAll);
-    yield put(setAgents(agents));
+    yield put(setAgents(agents || []));
   } catch (err) {
     yield put(setError(String(err)));
   }
@@ -74,7 +77,21 @@ function* handleFetchAgents() {
 function* handleCreateOrder(action: PayloadAction<Order>) {
   try {
     yield call(ordersTable.create, action.payload);
+
+    for (const item of action.payload.items) {
+      const product: Product | undefined = yield call(
+        productsTable.getById,
+        item.productId,
+      );
+      if (product) {
+        yield call(productsTable.update, item.productId, {
+          stock: Math.max(0, product.stock - item.quantity),
+        });
+      }
+    }
+
     yield put(fetchOrdersRequest());
+    yield put(fetchProductsRequest());
   } catch (err) {
     yield put(setError(String(err)));
   }
@@ -90,7 +107,7 @@ function* handleUpdateOrderStatus(
       action.payload.status,
     );
     yield put(fetchOrdersRequest());
-    yield put(fetchAgentsRequest()); // Sync agent busy status if status changed to DELIVERED
+    yield put(fetchAgentsRequest());
   } catch (err) {
     yield put(setError(String(err)));
   }

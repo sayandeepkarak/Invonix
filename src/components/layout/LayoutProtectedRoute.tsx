@@ -14,7 +14,7 @@ export function LayoutProtectedRoute({ children }: LayoutProtectedRouteProps) {
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push("/auth/login");
+      router.push("/auth/signin");
     }
   }, [isAuthenticated, isLoading, router]);
 

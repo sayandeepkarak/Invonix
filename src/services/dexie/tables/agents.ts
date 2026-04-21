@@ -4,51 +4,87 @@ import type {
   DeliveryAgent,
   AgentStatus,
 } from "@/features/orders/types/agents";
-import { ordersTable } from "@/services/dexie/tables/orders";
 import { DB_TABLES } from "@/services/dexie/const";
 
 export const agentsTable = {
-  getAll: (): Promise<DeliveryAgent[] | undefined> =>
-    manageAsyncOperation(async () => {
-      const agents = await db.table(DB_TABLES.AGENTS).toArray();
-      return await Promise.all(
-        agents.map(async (agent: DeliveryAgent) => {
+  getAll: (): Promise<DeliveryAgent[] | undefined> => {
+    return manageAsyncOperation(
+      async () => {
+        const agents = await db.table(DB_TABLES.AGENTS).toArray();
+        const results = agents.map(async (agent: DeliveryAgent) => {
           if (agent.orderId) {
-            const order: any = await ordersTable.getById(agent.orderId);
+            const order = await db.table(DB_TABLES.ORDERS).get(agent.orderId);
             return { ...agent, order };
           }
           return agent;
-        }),
-      );
-    }),
+        });
+        return await Promise.all(results);
+      },
+      () => {
+        return [];
+      },
+    );
+  },
 
-  getById: (id: string): Promise<DeliveryAgent | undefined> =>
-    manageAsyncOperation(async () => {
-      const agent = await db.table(DB_TABLES.AGENTS).get(id);
-      if (agent?.orderId) {
-        const order: any = await ordersTable.getById(agent.orderId);
-        return { ...agent, order };
-      }
-      return agent;
-    }),
+  getById: (id: string): Promise<DeliveryAgent | null> => {
+    return manageAsyncOperation(
+      async () => {
+        const agent = await db.table(DB_TABLES.AGENTS).get(id);
+        if (!agent) return null;
 
-  create: (agent: DeliveryAgent): Promise<any> =>
-    manageAsyncOperation(async () => {
-      return await db.table(DB_TABLES.AGENTS).add(agent);
-    }),
+        if (agent.orderId) {
+          const order = await db.table(DB_TABLES.ORDERS).get(agent.orderId);
+          return { ...agent, order };
+        }
+        return agent;
+      },
+      () => {
+        return null;
+      },
+    );
+  },
 
-  update: (id: string, updates: Partial<DeliveryAgent>): Promise<any> =>
-    manageAsyncOperation(async () => {
-      return await db.table(DB_TABLES.AGENTS).update(id, updates);
-    }),
+  create: (agent: DeliveryAgent): Promise<void> => {
+    return manageAsyncOperation(
+      async () => {
+        await db.table(DB_TABLES.AGENTS).add(agent);
+      },
+      () => {
+        return undefined;
+      },
+    );
+  },
 
-  updateStatus: (id: string, status: AgentStatus): Promise<any> =>
-    manageAsyncOperation(async () => {
-      return await db.table(DB_TABLES.AGENTS).update(id, { status });
-    }),
+  update: (id: string, updates: Partial<DeliveryAgent>): Promise<void> => {
+    return manageAsyncOperation(
+      async () => {
+        await db.table(DB_TABLES.AGENTS).update(id, updates);
+      },
+      () => {
+        return undefined;
+      },
+    );
+  },
 
-  delete: (id: string): Promise<any> =>
-    manageAsyncOperation(async () => {
-      return await db.table(DB_TABLES.AGENTS).delete(id);
-    }),
+  updateStatus: (id: string, status: AgentStatus): Promise<void> => {
+    return manageAsyncOperation(
+      async () => {
+        await db.table(DB_TABLES.AGENTS).update(id, { status });
+      },
+      () => {
+        return undefined;
+      },
+    );
+  },
+
+  delete: (id: string): Promise<void> => {
+    return manageAsyncOperation(
+      async () => {
+        return await db.table(DB_TABLES.AGENTS).delete(id);
+      },
+      () => {
+        return undefined;
+      },
+    );
+  },
 };

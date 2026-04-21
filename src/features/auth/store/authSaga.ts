@@ -21,7 +21,9 @@ import type {
   Session,
 } from "@/features/auth/types";
 
-const selectAuth = (state: any) => state.auth;
+import { RootState } from "@/store";
+
+const selectAuth = (state: RootState) => state.auth;
 
 function* handleLogin(action: PayloadAction<LoginPayload>) {
   try {

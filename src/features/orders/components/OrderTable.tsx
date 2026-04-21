@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { Order, OrderStatus } from "@/features/orders/types";
 import { ORDER_STATUS_OPTIONS } from "@/features/orders/const";
+import { APP_CONSTANTS } from "@/constants";
 
 interface OrderTableProps {
   orders: Order[];
@@ -27,14 +28,15 @@ export function OrderTable({
   onUpdateStatus,
   onAssign,
 }: OrderTableProps) {
-  const statusOptions = ORDER_STATUS_OPTIONS.filter((o) => o.value !== "ALL");
+  const statusOptions = ORDER_STATUS_OPTIONS.filter((o) => o.value !== APP_CONSTANTS.FILTER_ALL);
 
   const columns: AppTableColumn<Order>[] = [
     {
       header: "Order ID",
       key: "id",
-      className: "font-mono text-xs font-bold",
-      render: (order) => `#${order.id.slice(0, 8).toUpperCase()}`,
+      render: (order) => (
+        <span>#{order.id.slice(0, 8).toUpperCase()}</span>
+      ),
     },
     {
       header: "Customer",
@@ -63,6 +65,7 @@ export function OrderTable({
           value={order.status}
           onChange={(val) => onUpdateStatus(order.id, val as OrderStatus)}
           className="h-8 w-[140px] text-xs"
+          disabled={!order.agent}
         />
       ),
     },
@@ -78,36 +81,23 @@ export function OrderTable({
             </span>
           </div>
         ) : (
-          <span className="text-xs text-muted-foreground italic">
-            Unassigned
-          </span>
+          <AppButton
+            variant="outline"
+            size="sm"
+            className="h-8 text-xs px-3"
+            onClick={() => onAssign(order)}
+          >
+            Assign Agent
+          </AppButton>
         ),
     },
     {
       header: "Date",
       key: "createdAt",
-      className: "text-muted-foreground text-xs font-mono",
-      render: (order) => new Date(order.createdAt).toLocaleDateString(),
-    },
-    {
-      header: "Actions",
-      key: "actions",
-      className: "text-right",
       render: (order) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={(props: any) => (
-              <AppButton {...props} variant="ghost" size="icon">
-                <MoreHorizontal className="h-4 w-4" />
-              </AppButton>
-            )}
-          />
-          <DropdownMenuContent align="end" className="w-40">
-            <DropdownMenuItem onClick={() => onAssign(order)} className="gap-2">
-              <Truck className="h-4 w-4" /> Assign Agent
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <span className="text-sm text-muted-foreground" suppressHydrationWarning>
+          {new Date(order.createdAt).toLocaleDateString()}
+        </span>
       ),
     },
   ];

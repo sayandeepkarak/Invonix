@@ -1,41 +1,17 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import Link from "next/link";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { loginRequest } from "@/features/auth/store";
+import { useSignin } from "@/features/auth/hooks/useSignin";
 import {
   AppButton,
   AppInput,
   AppPasswordInput,
   AppCard,
 } from "@/components/wrapper";
-import type { LoginPayload } from "@/features/auth/types";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 export function AuthSignInForm() {
-  const dispatch = useAppDispatch();
-  const router = useRouter();
-  const { isLoading, error, isAuthenticated } = useAppSelector(
-    (state) => state.auth,
-  );
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginPayload>();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/dashboard");
-    }
-  }, [isAuthenticated, router]);
-
-  const onSubmit = (data: LoginPayload) => {
-    dispatch(loginRequest(data));
-  };
+  const { form, isLoading, error, onSubmit } = useSignin();
+  const { register, handleSubmit, formState: { errors } } = form;
 
   return (
     <AppCard
