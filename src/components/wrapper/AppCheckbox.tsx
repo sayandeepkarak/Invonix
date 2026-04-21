@@ -17,8 +17,12 @@ export function AppCheckbox({
   ref,
   ...props
 }: AppCheckboxProps) {
-  const handleCheckedChange = (checked: boolean, ...args: any[]) => {
-    onCheckedChange?.(checked, args[0]);
+  const handleCheckedChange = (
+    checked: boolean,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    event: any,
+  ) => {
+    onCheckedChange?.(checked, event);
     onChange?.(checked);
   };
   return (

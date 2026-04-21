@@ -1,6 +1,5 @@
 import { all, call, put, takeLatest } from "redux-saga/effects";
 import { ordersTable } from "@/services/dexie/tables/orders";
-import { productsTable } from "@/services/dexie/tables/products";
 import {
   setAnalyticsData,
   setLoading,
@@ -8,7 +7,6 @@ import {
 } from "@/features/dashboard/store/dashboardSlice";
 import { ORDER_STATUS, ORDER_STATUS_LABELS } from "@/features/orders/const";
 import type { Order } from "@/features/orders/types";
-import type { Product } from "@/features/inventory/types";
 
 function* handleFetchAnalytics() {
   try {

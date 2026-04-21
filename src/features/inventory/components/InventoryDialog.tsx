@@ -1,6 +1,6 @@
 import { useInventoryForm } from "@/features/inventory/hooks/useInventoryForm";
 import { AppDialog, AppStepper } from "@/components/wrapper";
-import { INVENTORY_STEPS } from "@/features/inventory/const";
+import { INVENTORY_STEPS, type InventoryStep } from "@/features/inventory/const";
 import type { Product } from "@/features/inventory/types";
 import { InventoryFormValues } from "@/features/inventory/schema";
 import { InventoryStepBasicInfo } from "@/features/inventory/components/InventoryStepBasicInfo";
@@ -35,7 +35,7 @@ export default function InventoryDialog({
   const steps = Object.values(INVENTORY_STEPS);
   const currentStepIndex = steps.indexOf(currentStep);
 
-  const stepTitles: Record<string, string> = {
+  const stepTitles: Record<InventoryStep, string> = {
     [INVENTORY_STEPS.BASIC_INFO]: "Basic Information",
     [INVENTORY_STEPS.PRICING_STOCK]: "Pricing & Stock",
     [INVENTORY_STEPS.TAGS]: "Tags & Categorization",

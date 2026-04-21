@@ -4,6 +4,7 @@ import type { Product } from "@/features/inventory/types";
 import {
   INVENTORY_CATEGORY,
   INVENTORY_STEPS,
+  type InventoryStep,
 } from "@/features/inventory/const";
 
 interface UseInventoryFormProps {
@@ -19,7 +20,7 @@ export function useInventoryForm({
   product,
   onSubmit,
 }: UseInventoryFormProps) {
-  const [currentStep, setCurrentStep] = useState<string>(
+  const [currentStep, setCurrentStep] = useState<InventoryStep>(
     INVENTORY_STEPS.BASIC_INFO,
   );
   const [formData, setFormData] = useState<Partial<InventoryFormValues>>({});
@@ -59,7 +60,7 @@ export function useInventoryForm({
 
   const handleNext = (
     stepData: Partial<InventoryFormValues>,
-    nextStep: string,
+    nextStep: InventoryStep,
   ) => {
     setFormData((prev) => {
       return { ...prev, ...stepData };
@@ -67,7 +68,7 @@ export function useInventoryForm({
     setCurrentStep(nextStep);
   };
 
-  const handleBack = (prevStep: string) => {
+  const handleBack = (prevStep: InventoryStep) => {
     return setCurrentStep(prevStep);
   };
 

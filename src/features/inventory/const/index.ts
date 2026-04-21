@@ -1,8 +1,10 @@
-export const INVENTORY_STEPS = Object.freeze({
+export const INVENTORY_STEPS = {
   BASIC_INFO: "BASIC_INFO",
   PRICING_STOCK: "PRICING_STOCK",
   TAGS: "TAGS",
-});
+} as const;
+
+export type InventoryStep = (typeof INVENTORY_STEPS)[keyof typeof INVENTORY_STEPS];
 
 export const INVENTORY_CATEGORY = Object.freeze({
   ELECTRONICS: "Electronics",
