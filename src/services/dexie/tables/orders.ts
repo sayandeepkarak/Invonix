@@ -4,6 +4,7 @@ import type { Order, OrderStatus } from "@/features/orders/types";
 import { usersTable } from "@/services/dexie/tables/users";
 import { DB_TABLES } from "@/services/dexie/const";
 import { ORDER_STATUS, AGENT_STATUS } from "@/features/orders/const";
+import type { User } from "@/features/auth/types";
 
 export const ordersTable = {
   getAll: (): Promise<Order[] | undefined> => {
@@ -16,7 +17,21 @@ export const ordersTable = {
           .toArray();
 
         const results = orders.map(async (order) => {
-          const user = await usersTable.getUserById(order.userId);
+          let user = await usersTable.getUserById(order.userId);
+
+          if (!user && order.userId === "GUEST_USER") {
+            user = {
+              id: "GUEST_USER",
+              name: "Walk-in Customer",
+              email: "customer@invonix.com",
+              phone: "+123456789",
+              businessName: "Guest",
+              businessType: "Retail",
+              isVerified: true,
+              createdAt: order.createdAt,
+            } as User;
+          }
+
           const agent = order.agentId
             ? await db.table(DB_TABLES.AGENTS).get(order.agentId)
             : null;

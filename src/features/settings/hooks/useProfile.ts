@@ -23,14 +23,22 @@ export function useProfile() {
 
   useEffect(() => {
     if (user) {
-      reset({
-        name: user.name,
-        email: user.email,
-        businessName: user.businessName,
-        phone: user.phone,
-      });
+      const currentValues = form.getValues();
+      if (
+        currentValues.name !== user.name ||
+        currentValues.email !== user.email ||
+        currentValues.businessName !== user.businessName ||
+        currentValues.phone !== user.phone
+      ) {
+        reset({
+          name: user.name,
+          email: user.email,
+          businessName: user.businessName,
+          phone: user.phone,
+        });
+      }
     }
-  }, [user, reset]);
+  }, [user, reset, form]);
 
   const onSubmit = (data: Partial<UserType>) => {
     dispatch(updateProfileRequest(data));

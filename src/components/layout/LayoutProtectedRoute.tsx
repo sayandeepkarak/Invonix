@@ -8,17 +8,17 @@ interface LayoutProtectedRouteProps {
 }
 
 export function LayoutProtectedRoute({ children }: LayoutProtectedRouteProps) {
-  const { isAuthenticated, isLoading } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, isInitialized } = useAppSelector((state) => state.auth);
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (isInitialized && !isAuthenticated) {
       router.push("/auth/signin");
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, isInitialized, router]);
 
-  if (isLoading) {
+  if (!isInitialized) {
     return (
       <div className="bg-background flex min-h-screen items-center justify-center">
         <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
@@ -26,7 +26,7 @@ export function LayoutProtectedRoute({ children }: LayoutProtectedRouteProps) {
     );
   }
 
-  if (!isAuthenticated && pathname.startsWith("/dashboard")) {
+  if (!isAuthenticated && (pathname.startsWith("/dashboard") || pathname !== "/auth/signin" && pathname !== "/auth/signup")) {
     return null;
   }
 

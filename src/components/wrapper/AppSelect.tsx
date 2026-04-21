@@ -61,13 +61,7 @@ export function AppSelect({
             className,
           )}
         >
-          <SelectValue placeholder={placeholder}>
-            {
-              options.find((o) => {
-                return o.value === value;
-              })?.label
-            }
-          </SelectValue>
+          <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
           {options.map((option) => {

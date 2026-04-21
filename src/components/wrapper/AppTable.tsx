@@ -23,6 +23,7 @@ interface AppTableProps<T> {
   className?: string;
   emptyMessage?: string;
   maxHeight?: string;
+  minHeight?: string;
   estimateRowHeight?: number;
 }
 
@@ -32,6 +33,7 @@ export function AppTable<T extends { id: string | number }>({
   className,
   emptyMessage = "No data available.",
   maxHeight = "calc(100vh - 300px)",
+  minHeight = "400px",
   estimateRowHeight = 52,
 }: AppTableProps<T>) {
   const parentRef = React.useRef<HTMLDivElement>(null);
@@ -51,7 +53,7 @@ export function AppTable<T extends { id: string | number }>({
       <div
         ref={parentRef}
         className="relative overflow-auto"
-        style={{ maxHeight }}
+        style={{ maxHeight, minHeight }}
       >
         <Table className="relative">
           <TableHeader className="bg-card sticky top-0 z-20 shadow-sm">
