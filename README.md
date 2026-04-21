@@ -35,3 +35,8 @@ pnpm format
 - **Orders & Inventory**: The system automatically links orders to your current product inventory, calculating totals and tracking assignments.
 - **Persistence**: Built with an offline-first approach using Dexie (IndexedDB), ensuring your data remains accessible even without a stable internet connection.
 - **Component System**: Uses a custom wrapper system over Shadcn UI for a consistent, premium user experience throughout the application.
+
+## Branching Strategy
+- **`main`**: Production-ready code.
+- **`staging`**: Development and feature integration.
+

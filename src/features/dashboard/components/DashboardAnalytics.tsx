@@ -10,9 +10,6 @@ const DashboardRevenueChart = dynamic(
   () => import("@/features/dashboard/components/DashboardRevenueChart"),
   {
     ssr: false,
-    loading: () => (
-      <div className="bg-muted h-80 w-full animate-pulse rounded-xl" />
-    ),
   },
 );
 
@@ -20,9 +17,6 @@ const DashboardStatusDistribution = dynamic(
   () => import("@/features/dashboard/components/DashboardStatusDistribution"),
   {
     ssr: false,
-    loading: () => (
-      <div className="bg-muted h-80 w-full animate-pulse rounded-xl" />
-    ),
   },
 );
 

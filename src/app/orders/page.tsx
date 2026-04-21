@@ -7,9 +7,6 @@ const OrderManagement = dynamic(
   () => import("@/features/orders/components/OrderManagement"),
   {
     ssr: false,
-    loading: () => (
-      <div className="bg-muted h-96 w-full animate-pulse rounded-xl" />
-    ),
   },
 );
 
