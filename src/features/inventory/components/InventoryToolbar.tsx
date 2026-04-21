@@ -18,7 +18,9 @@ export function InventoryToolbar({
         <AppInput
           placeholder="Search products..."
           icon={<Search className="h-4 w-4" />}
-          onChange={(e) => onSearch(e.target.value)}
+          onChange={(e) => {
+            return onSearch(e.target.value);
+          }}
         />
       </div>
       <AppButton onClick={onAddProduct} className="gap-2">

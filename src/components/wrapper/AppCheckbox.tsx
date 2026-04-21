@@ -17,7 +17,11 @@ export function AppCheckbox({
   ref,
   ...props
 }: AppCheckboxProps) {
-  const handleCheckedChange = (checked: boolean, event: any) => {
+  const handleCheckedChange = (
+    checked: boolean,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    event: any,
+  ) => {
     onCheckedChange?.(checked, event);
     onChange?.(checked);
   };
@@ -33,12 +37,12 @@ export function AppCheckbox({
         />
         <Label
           htmlFor={id}
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         >
           {label}
         </Label>
       </div>
-      {error && <p className="text-xs font-medium text-destructive">{error}</p>}
+      {error && <p className="text-destructive text-xs font-medium">{error}</p>}
     </div>
   );
 }

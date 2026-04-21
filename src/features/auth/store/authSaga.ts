@@ -21,7 +21,9 @@ import type {
   Session,
 } from "@/features/auth/types";
 
-const selectAuth = (state: any) => state.auth;
+import { RootState } from "@/store";
+
+const selectAuth = (state: RootState) => state.auth;
 
 function* handleLogin(action: PayloadAction<LoginPayload>) {
   try {
@@ -42,7 +44,7 @@ function* handleLogin(action: PayloadAction<LoginPayload>) {
     };
 
     yield call(sessionsTable.createSession, session);
-    sessionStorage.setItem(SESSION_STORAGE_KEY, "true");
+    localStorage.setItem(SESSION_STORAGE_KEY, "true");
 
     yield put(authSuccess(user));
   } catch (err) {
@@ -78,7 +80,7 @@ function* handleSignup(action: PayloadAction<SignupPayload>) {
     };
 
     yield call(sessionsTable.createSession, session);
-    sessionStorage.setItem(SESSION_STORAGE_KEY, "true");
+    localStorage.setItem(SESSION_STORAGE_KEY, "true");
 
     yield put(authSuccess(user));
   } catch (err) {
@@ -90,6 +92,7 @@ function* handleLogout() {
   try {
     yield call(sessionsTable.clearSessions);
     sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    localStorage.removeItem(SESSION_STORAGE_KEY);
     yield put(logoutSuccess());
   } catch (err) {
     yield put(authFailure(String(err)));
@@ -108,7 +111,9 @@ function* handleAutoLogin() {
     }
 
     const isSessionActive =
-      sessionStorage.getItem(SESSION_STORAGE_KEY) === "true";
+      sessionStorage.getItem(SESSION_STORAGE_KEY) === "true" ||
+      localStorage.getItem(SESSION_STORAGE_KEY) === "true";
+
     const user: User | undefined = yield call(
       usersTable.getUserById,
       session.userId,
@@ -119,6 +124,7 @@ function* handleAutoLogin() {
     } else {
       yield call(sessionsTable.clearSessions);
       sessionStorage.removeItem(SESSION_STORAGE_KEY);
+      localStorage.removeItem(SESSION_STORAGE_KEY);
       yield put(logoutSuccess());
     }
   } catch (err) {

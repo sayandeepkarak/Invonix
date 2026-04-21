@@ -14,14 +14,14 @@ export function LayoutProtectedRoute({ children }: LayoutProtectedRouteProps) {
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push("/auth/login");
+      router.push("/auth/signin");
     }
   }, [isAuthenticated, isLoading, router]);
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      <div className="bg-background flex min-h-screen items-center justify-center">
+        <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
       </div>
     );
   }

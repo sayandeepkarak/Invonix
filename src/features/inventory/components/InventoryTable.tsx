@@ -1,17 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
 import { AppButton, AppTable, type AppTableColumn } from "@/components/wrapper";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Edit, Trash2, Package } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import type { Product } from "@/features/inventory/types";
 
 interface InventoryTableProps {
@@ -27,91 +18,90 @@ export function InventoryTable({
   onEdit,
   onDelete,
 }: InventoryTableProps) {
-  const filteredProducts = useMemo(() => {
-    return products.filter(
-      (product) =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-  }, [products, searchQuery]);
+  const filteredProducts = products.filter((product) => {
+    if (!product.isActive) {
+      return false;
+    }
+    return product.name.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   const columns: AppTableColumn<Product>[] = [
-    {
-      header: "Product",
-      key: "name",
-      render: (product) => (
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded bg-muted">
-            <Package className="h-5 w-5 text-muted-foreground" />
-          </div>
-          <span className="font-medium">{product.name}</span>
-        </div>
-      ),
-    },
     {
       header: "SKU",
       key: "sku",
     },
     {
+      header: "Product",
+      key: "name",
+      render: (product) => {
+        return <span className="font-medium">{product.name}</span>;
+      },
+    },
+    {
       header: "Category",
       key: "category",
-      render: (product) => (
-        <Badge variant="secondary">{product.category}</Badge>
-      ),
+      render: (product) => {
+        return <Badge variant="secondary">{product.category}</Badge>;
+      },
     },
     {
       header: "Price",
       key: "price",
       className: "text-right",
-      render: (product) => `$${product.price.toFixed(2)}`,
+      render: (product) => {
+        return `$${product.price.toFixed(2)}`;
+      },
     },
     {
       header: "Stock",
       key: "stock",
       className: "text-right",
-      render: (product) => (
-        <span
-          className={
-            product.stock <= product.lowStockThreshold
-              ? "text-destructive font-bold"
-              : ""
-          }
-        >
-          {product.stock}
-        </span>
-      ),
+      render: (product) => {
+        return (
+          <span
+            className={
+              product.stock <= product.lowStockThreshold
+                ? "text-destructive font-bold"
+                : ""
+            }
+          >
+            {product.stock}
+          </span>
+        );
+      },
     },
     {
-      header: "",
+      header: "Actions",
       key: "actions",
       className: "text-right",
-      render: (product) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={(props: any) => (
-              <AppButton variant="ghost" className="h-8 w-8 p-0" {...props}>
-                <MoreHorizontal className="h-4 w-4" />
-              </AppButton>
-            )}
-          />
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => onEdit(product)}>
-              <Edit className="mr-2 h-4 w-4" />
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="text-destructive"
-              onClick={() => onDelete(product)}
+      render: (product) => {
+        return (
+          <div className="flex items-center justify-end gap-2">
+            <AppButton
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground hover:text-foreground h-8 w-8"
+              onClick={() => {
+                return onEdit(product);
+              }}
+              tooltip="Edit product"
             >
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ),
+              <Edit className="h-4 w-4" />
+            </AppButton>
+            <AppButton
+              variant="ghost"
+              size="icon"
+              className="text-destructive hover:bg-destructive/10 h-8 w-8"
+              onClick={() => {
+                return onDelete(product);
+              }}
+              tooltip="Delete product"
+            >
+              <Trash2 className="h-4 w-4" />
+            </AppButton>
+          </div>
+        );
+      },
     },
   ];
 

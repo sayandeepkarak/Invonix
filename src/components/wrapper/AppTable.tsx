@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   Table,
   TableBody,
@@ -6,11 +7,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { cn } from "@/lib/utils";
 
 export interface AppTableColumn<T> {
   header: string;
-  key: string;
+  key: keyof T | string;
   className?: string;
   render?: (item: T) => React.ReactNode;
 }
@@ -20,6 +22,8 @@ interface AppTableProps<T> {
   data: T[];
   className?: string;
   emptyMessage?: string;
+  maxHeight?: string;
+  estimateRowHeight?: number;
 }
 
 export function AppTable<T extends { id: string | number }>({
@@ -27,47 +31,97 @@ export function AppTable<T extends { id: string | number }>({
   data,
   className,
   emptyMessage = "No data available.",
+  maxHeight = "calc(100vh - 300px)",
+  estimateRowHeight = 52,
 }: AppTableProps<T>) {
+  const parentRef = React.useRef<HTMLDivElement>(null);
+
+  const virtualizer = useVirtualizer({
+    count: data.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => estimateRowHeight,
+    overscan: 5,
+  });
+
+  const virtualRows = virtualizer.getVirtualItems();
+  const totalHeight = virtualizer.getTotalSize();
+
   return (
-    <div className={cn("rounded-md border bg-card overflow-hidden", className)}>
-      <Table>
-        <TableHeader>
-          <TableRow className="bg-muted/50">
-            {columns.map((column) => (
-              <TableHead key={column.key} className={column.className}>
-                {column.header}
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                {emptyMessage}
-              </TableCell>
-            </TableRow>
-          ) : (
-            data.map((item) => (
-              <TableRow
-                key={item.id}
-                className="hover:bg-muted/30 transition-colors"
-              >
-                {columns.map((column) => (
-                  <TableCell
-                    key={`${item.id}-${column.key}`}
+    <div className={cn("bg-card overflow-hidden rounded-md border", className)}>
+      <div
+        ref={parentRef}
+        className="relative overflow-auto"
+        style={{ maxHeight }}
+      >
+        <Table className="relative">
+          <TableHeader className="bg-card sticky top-0 z-20 shadow-sm">
+            <TableRow className="bg-muted/50 border-b">
+              {columns.map((column) => {
+                return (
+                  <TableHead
+                    key={column.key as string}
                     className={column.className}
                   >
-                    {column.render
-                      ? column.render(item)
-                      : (item as any)[column.key]}
-                  </TableCell>
-                ))}
+                    {column.header}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {!data.length ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  {emptyMessage}
+                </TableCell>
               </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
+            ) : (
+              <>
+                {virtualRows.length > 0 && (
+                  <tr style={{ height: `${virtualRows[0]?.start ?? 0}px` }} />
+                )}
+                {virtualRows.map((virtualRow) => {
+                  const item = data[virtualRow.index];
+                  if (!item) return null;
+                  return (
+                    <TableRow
+                      key={item.id}
+                      data-index={virtualRow.index}
+                      ref={virtualizer.measureElement}
+                      className="hover:bg-muted/30 transition-colors"
+                    >
+                      {columns.map((column) => {
+                        return (
+                          <TableCell
+                            key={`${item.id}-${column.key as string}`}
+                            className={column.className}
+                          >
+                            {column.render
+                              ? column.render(item)
+                              : (item[
+                                  column.key as keyof T
+                                ] as React.ReactNode)}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })}
+                {virtualRows.length > 0 && (
+                  <tr
+                    style={{
+                      height: `${totalHeight - (virtualRows[virtualRows.length - 1]?.end ?? totalHeight)}px`,
+                    }}
+                  />
+                )}
+              </>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }

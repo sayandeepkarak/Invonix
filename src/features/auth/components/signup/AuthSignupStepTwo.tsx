@@ -55,32 +55,38 @@ export function AuthSignupStepTwo({
 
   return (
     <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <p className="text-sm text-muted-foreground">
+      <div className="space-y-2 text-center">
+        <p className="text-muted-foreground text-sm">
           We&apos;ve sent a verification code to
           <br />
-          <span className="font-medium text-foreground">{email}</span>
+          <span className="text-foreground font-medium">{email}</span>
         </p>
       </div>
 
       <div className="flex justify-between gap-2">
-        {otp.map((digit, index) => (
-          <input
-            key={index}
-            ref={(el) => {
-              inputRefs.current[index] = el;
-            }}
-            type="text"
-            maxLength={1}
-            value={digit}
-            onChange={(e) => handleChange(e.target.value, index)}
-            onKeyDown={(e) => handleKeyDown(e, index)}
-            className="w-12 h-14 text-center text-xl font-bold rounded-md border border-input bg-background focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
-          />
-        ))}
+        {otp.map((digit, index) => {
+          return (
+            <input
+              key={index}
+              ref={(el) => {
+                inputRefs.current[index] = el;
+              }}
+              type="text"
+              maxLength={1}
+              value={digit}
+              onChange={(e) => {
+                return handleChange(e.target.value, index);
+              }}
+              onKeyDown={(e) => {
+                return handleKeyDown(e, index);
+              }}
+              className="border-input bg-background focus:ring-primary focus:border-primary h-14 w-12 rounded-md border text-center text-xl font-bold transition-all outline-none focus:ring-2"
+            />
+          );
+        })}
       </div>
 
-      {error && <p className="text-sm text-destructive text-center">{error}</p>}
+      {error && <p className="text-destructive text-center text-sm">{error}</p>}
 
       <div className="space-y-2">
         <AppButton onClick={handleSubmit} className="w-full">
@@ -90,11 +96,6 @@ export function AuthSignupStepTwo({
           Back to Basic Info
         </AppButton>
       </div>
-
-      <p className="text-center text-xs text-muted-foreground">
-        Didn&apos;t receive the code?{" "}
-        <button className="text-primary hover:underline">Resend code</button>
-      </p>
     </div>
   );
 }

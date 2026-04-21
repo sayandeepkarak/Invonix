@@ -1,79 +1,60 @@
-import { useAppSelector, useAppDispatch } from "@/store/hooks";
-import { AppButton, AppInput } from "@/components/wrapper";
-import { useForm } from "react-hook-form";
-import { User as UserType } from "@/features/auth/types";
-import { User as UserIcon, Mail, Building2, Phone } from "lucide-react";
-import { updateProfileRequest } from "@/features/auth/store";
-import { useEffect } from "react";
+"use client";
 
-export function SettingsProfile() {
-  const { user, isLoading } = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch();
+import { useProfile } from "@/features/settings/hooks/useProfile";
+import { AppButton, AppInput, AppCard } from "@/components/wrapper";
 
+export default function SettingsProfile() {
+  const { form, isLoading, onSubmit } = useProfile();
   const {
     register,
     handleSubmit,
-    reset,
-    formState: { isDirty },
-  } = useForm<Partial<UserType>>({
-    defaultValues: {
-      name: user?.name,
-      email: user?.email,
-      businessName: user?.businessName,
-      phone: user?.phone,
-    },
-  });
-
-  useEffect(() => {
-    if (user) {
-      reset({
-        name: user.name,
-        email: user.email,
-        businessName: user.businessName,
-        phone: user.phone,
-      });
-    }
-  }, [user, reset]);
-
-  const onSubmit = (data: Partial<UserType>) => {
-    dispatch(updateProfileRequest(data));
-  };
+    formState: { isDirty, errors },
+  } = form;
 
   return (
-    <div className="grid gap-6 md:grid-cols-1">
+    <AppCard
+      title="Profile Information"
+      description="Update your personal and business details here."
+    >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold">Personal Information</h2>
             <AppInput
               label="Full Name"
-              icon={<UserIcon className="h-4 w-4" />}
+              id="name"
+              placeholder="Your name"
               {...register("name")}
+              error={errors.name?.message}
             />
             <AppInput
               label="Email Address"
-              icon={<Mail className="h-4 w-4" />}
+              id="email"
+              placeholder="Your email"
               disabled
               {...register("email")}
+              error={errors.email?.message}
             />
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold">Business Information</h2>
             <AppInput
               label="Business Name"
-              icon={<Building2 className="h-4 w-4" />}
+              id="businessName"
+              placeholder="Your business name"
               {...register("businessName")}
+              error={errors.businessName?.message}
             />
             <AppInput
               label="Phone Number"
-              icon={<Phone className="h-4 w-4" />}
+              id="phone"
+              placeholder="Your phone number"
               {...register("phone")}
+              error={errors.phone?.message}
             />
           </div>
         </div>
 
-        <div className="flex justify-end pt-2">
+        <div className="flex justify-end">
           <AppButton
             type="submit"
             disabled={!isDirty || isLoading}
@@ -83,6 +64,6 @@ export function SettingsProfile() {
           </AppButton>
         </div>
       </form>
-    </div>
+    </AppCard>
   );
 }

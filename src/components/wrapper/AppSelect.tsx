@@ -48,7 +48,9 @@ export function AppSelect({
       <Select
         value={value}
         defaultValue={defaultValue}
-        onValueChange={(val) => onChange?.(val || "")}
+        onValueChange={(val) => {
+          return onChange?.(val || "");
+        }}
         disabled={disabled}
       >
         <SelectTrigger
@@ -59,17 +61,25 @@ export function AppSelect({
             className,
           )}
         >
-          <SelectValue placeholder={placeholder} />
+          <SelectValue placeholder={placeholder}>
+            {
+              options.find((o) => {
+                return o.value === value;
+              })?.label
+            }
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
-          {options.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
+          {options.map((option) => {
+            return (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            );
+          })}
         </SelectContent>
       </Select>
-      {error && <p className="text-xs font-medium text-destructive">{error}</p>}
+      {error && <p className="text-destructive text-xs font-medium">{error}</p>}
     </div>
   );
 }

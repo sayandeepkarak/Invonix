@@ -1,24 +1,11 @@
-"use client";
-
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  AppDialog,
-  AppInput,
-  AppSelect,
-  AppTextarea,
-  AppButton,
-} from "@/components/wrapper";
-import {
-  InventoryFormValues,
-  InventorySchema,
-} from "@/features/inventory/schema";
+import { useInventoryForm } from "@/features/inventory/hooks/useInventoryForm";
+import { AppDialog, AppStepper } from "@/components/wrapper";
+import { INVENTORY_STEPS, type InventoryStep } from "@/features/inventory/const";
 import type { Product } from "@/features/inventory/types";
-import {
-  INVENTORY_CATEGORY,
-  INVENTORY_CATEGORY_OPTIONS,
-} from "@/features/inventory/const";
+import { InventoryFormValues } from "@/features/inventory/schema";
+import { InventoryStepBasicInfo } from "@/features/inventory/components/InventoryStepBasicInfo";
+import { InventoryStepPricingStock } from "@/features/inventory/components/InventoryStepPricingStock";
+import { InventoryStepTags } from "@/features/inventory/components/InventoryStepTags";
 
 interface InventoryDialogProps {
   open: boolean;
@@ -29,7 +16,7 @@ interface InventoryDialogProps {
   onSubmit: (data: InventoryFormValues) => void;
 }
 
-export function InventoryDialog({
+export default function InventoryDialog({
   open,
   isEdit,
   product,
@@ -37,161 +24,64 @@ export function InventoryDialog({
   onClose,
   onSubmit,
 }: InventoryDialogProps) {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm<InventoryFormValues>({
-    resolver: zodResolver(InventorySchema) as any,
-  });
+  const { currentStep, formData, handleNext, handleBack, handleFinalSubmit } =
+    useInventoryForm({
+      open,
+      isEdit,
+      product,
+      onSubmit,
+    });
 
-  useEffect(() => {
-    if (open) {
-      if (isEdit && product) {
-        reset({
-          name: product.name,
-          sku: product.sku,
-          category: product.category,
-          price: product.price,
-          costPrice: product.costPrice,
-          salePrice: product.salePrice,
-          stock: product.stock,
-          lowStockThreshold: product.lowStockThreshold,
-          description: product.description || "",
-          tags: product.tags.join(", "),
-        });
-      } else {
-        reset({
-          name: "",
-          sku: "",
-          category: INVENTORY_CATEGORY.ELECTRONICS,
-          price: 0,
-          costPrice: 0,
-          salePrice: 0,
-          stock: 0,
-          lowStockThreshold: 5,
-          description: "",
-          tags: "",
-        });
-      }
-    }
-  }, [open, isEdit, product, reset]);
+  const steps = Object.values(INVENTORY_STEPS);
+  const currentStepIndex = steps.indexOf(currentStep);
+
+  const stepTitles: Record<InventoryStep, string> = {
+    [INVENTORY_STEPS.BASIC_INFO]: "Basic Information",
+    [INVENTORY_STEPS.PRICING_STOCK]: "Pricing & Stock",
+    [INVENTORY_STEPS.TAGS]: "Tags & Categorization",
+  };
 
   return (
     <AppDialog
       open={open}
       onOpenChange={onClose}
-      title={isEdit ? "Edit Product" : "Add Product"}
-      maxWidth="sm:max-w-[600px]"
-      footer={
-        <div className="flex gap-2 justify-end w-full">
-          <AppButton variant="outline" onClick={onClose} disabled={isLoading}>
-            Cancel
-          </AppButton>
-          <AppButton
-            form="inventory-form"
-            type="submit"
-            disabled={isLoading}
-            loading={isLoading}
-          >
-            {isEdit ? "Update Product" : "Create Product"}
-          </AppButton>
-        </div>
+      title={
+        isEdit
+          ? `Edit Product: ${stepTitles[currentStep]}`
+          : `Add Product: ${stepTitles[currentStep]}`
       }
+      maxWidth="sm:max-w-[500px]"
+      footer={null}
     >
-      <form
-        id="inventory-form"
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4"
-      >
-        <div className="grid gap-4">
-          <AppInput
-            label="Product Name"
-            id="name"
-            placeholder="e.g. Wireless Mouse"
-            {...register("name")}
-            error={errors.name?.message}
-          />
+      <AppStepper steps={steps} currentStep={currentStepIndex}>
+        <div className="pt-2">
+          {currentStep === INVENTORY_STEPS.BASIC_INFO && (
+            <InventoryStepBasicInfo
+              onNext={(data) => handleNext(data, INVENTORY_STEPS.PRICING_STOCK)}
+              onClose={onClose}
+              initialData={formData}
+            />
+          )}
 
-          <div className="grid grid-cols-2 gap-4">
-            <AppInput
-              label="SKU"
-              id="sku"
-              placeholder="PROD-001"
-              {...register("sku")}
-              error={errors.sku?.message}
+          {currentStep === INVENTORY_STEPS.PRICING_STOCK && (
+            <InventoryStepPricingStock
+              onNext={(data) => handleNext(data, INVENTORY_STEPS.TAGS)}
+              onBack={() => handleBack(INVENTORY_STEPS.BASIC_INFO)}
+              initialData={formData}
             />
-            <AppSelect
-              label="Category"
-              options={INVENTORY_CATEGORY_OPTIONS}
-              defaultValue={product?.category || INVENTORY_CATEGORY.ELECTRONICS}
-              onChange={(val) => setValue("category", val)}
-            />
-          </div>
+          )}
 
-          <div className="grid grid-cols-3 gap-4">
-            <AppInput
-              label="Base Price ($)"
-              id="price"
-              type="number"
-              step="0.01"
-              {...register("price", { valueAsNumber: true })}
-              error={errors.price?.message}
+          {currentStep === INVENTORY_STEPS.TAGS && (
+            <InventoryStepTags
+              onSubmit={handleFinalSubmit}
+              onBack={() => handleBack(INVENTORY_STEPS.PRICING_STOCK)}
+              initialData={formData}
+              isLoading={isLoading}
+              isEdit={isEdit}
             />
-            <AppInput
-              label="Cost Price ($)"
-              id="costPrice"
-              type="number"
-              step="0.01"
-              {...register("costPrice", { valueAsNumber: true })}
-              error={errors.costPrice?.message}
-            />
-            <AppInput
-              label="Sale Price ($)"
-              id="salePrice"
-              type="number"
-              step="0.01"
-              {...register("salePrice", { valueAsNumber: true })}
-              error={errors.salePrice?.message}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <AppInput
-              label="Initial Stock"
-              id="stock"
-              type="number"
-              {...register("stock", { valueAsNumber: true })}
-              error={errors.stock?.message}
-            />
-            <AppInput
-              label="Low Stock Threshold"
-              id="lowStockThreshold"
-              type="number"
-              {...register("lowStockThreshold", { valueAsNumber: true })}
-              error={errors.lowStockThreshold?.message}
-            />
-          </div>
-
-          <AppTextarea
-            label="Description"
-            id="description"
-            placeholder="Product details and specifications..."
-            className="min-h-25"
-            {...register("description")}
-            error={errors.description?.message}
-          />
-
-          <AppInput
-            label="Tags (comma separated)"
-            id="tags"
-            placeholder="gadget, tech, wireless"
-            {...register("tags")}
-          />
+          )}
         </div>
-      </form>
+      </AppStepper>
     </AppDialog>
   );
 }

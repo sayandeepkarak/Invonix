@@ -19,7 +19,7 @@ import type {
 function* handleFetchProducts() {
   try {
     const products: Product[] = yield call(productsTable.getAll);
-    yield put(fetchProductsSuccess(products));
+    yield put(fetchProductsSuccess(products || []));
   } catch (err) {
     yield put(productFailure(String(err)));
   }

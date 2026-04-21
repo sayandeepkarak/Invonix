@@ -1,41 +1,21 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import Link from "next/link";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { loginRequest } from "@/features/auth/store";
+import { useSignin } from "@/features/auth/hooks/useSignin";
 import {
   AppButton,
   AppInput,
   AppPasswordInput,
   AppCard,
 } from "@/components/wrapper";
-import type { LoginPayload } from "@/features/auth/types";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 export function AuthSignInForm() {
-  const dispatch = useAppDispatch();
-  const router = useRouter();
-  const { isLoading, error, isAuthenticated } = useAppSelector(
-    (state) => state.auth,
-  );
-
+  const { form, isLoading, error, onSubmit } = useSignin();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginPayload>();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/dashboard");
-    }
-  }, [isAuthenticated, router]);
-
-  const onSubmit = (data: LoginPayload) => {
-    dispatch(loginRequest(data));
-  };
+  } = form;
 
   return (
     <AppCard
@@ -45,8 +25,8 @@ export function AuthSignInForm() {
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {error && (
-          <div className="rounded-md bg-destructive/10 p-3">
-            <p className="text-sm text-destructive">{error}</p>
+          <div className="bg-destructive/10 rounded-md p-3">
+            <p className="text-destructive text-sm">{error}</p>
           </div>
         )}
 
@@ -80,7 +60,7 @@ export function AuthSignInForm() {
           {isLoading ? "Signing in..." : "Sign In"}
         </AppButton>
 
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-center text-sm">
           Don&apos;t have an account?{" "}
           <Link
             href="/auth/signup"

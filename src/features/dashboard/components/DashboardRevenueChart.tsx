@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -10,52 +10,63 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { AppCard } from "@/components/wrapper";
+import { DashboardChartTooltip } from "@/features/dashboard/components/DashboardChartTooltip";
 
 interface DashboardRevenueChartProps {
   data: { month: string; amount: number }[];
   className?: string;
 }
 
-export function DashboardRevenueChart({
+export default function DashboardRevenueChart({
   data,
   className,
 }: DashboardRevenueChartProps) {
   return (
-    <AppCard
-      title="Revenue Trend"
-      description="Total sales income over the last 6 months"
-      className={className}
-    >
-      <div className="h-75 w-full pt-4">
+    <AppCard title="Revenue Trend" className={className}>
+      <div className="h-80 w-full pt-4">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data}>
+          <LineChart
+            data={data}
+            margin={{ left: -20, right: 10, top: 10, bottom: 10 }}
+          >
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
-              stroke="hsl(var(--muted)/0.5)"
+              stroke="var(--border)"
             />
             <XAxis
               dataKey="month"
-              stroke="hsl(var(--muted-foreground))"
+              stroke="var(--muted-foreground)"
               fontSize={12}
               tickLine={false}
               axisLine={false}
+              dy={10}
             />
             <YAxis
-              stroke="hsl(var(--muted-foreground))"
+              stroke="var(--muted-foreground)"
               fontSize={12}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => `$${value}`}
+              tickFormatter={(value) => {
+                return `$${value}`;
+              }}
             />
-            <Tooltip />
-            <Bar
+            <Tooltip content={<DashboardChartTooltip valuePrefix="$" />} />
+            <Line
+              type="monotone"
               dataKey="amount"
-              fill="hsl(var(--primary))"
-              radius={[4, 4, 0, 0]}
-              barSize={32}
+              stroke="#3b82f6"
+              strokeWidth={3}
+              dot={{
+                fill: "#3b82f6",
+                r: 4,
+                strokeWidth: 2,
+                stroke: "var(--card)",
+              }}
+              activeDot={{ r: 6, strokeWidth: 0 }}
+              animationDuration={1500}
             />
-          </BarChart>
+          </LineChart>
         </ResponsiveContainer>
       </div>
     </AppCard>

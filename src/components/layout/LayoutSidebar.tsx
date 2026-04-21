@@ -35,9 +35,13 @@ import { logoutRequest } from "@/features/auth/store";
 
 const navItems = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { title: "Inventory", href: "/dashboard/inventory", icon: Package },
-  { title: "Orders", href: "/dashboard/orders", icon: ShoppingCart },
-  { title: "Delivery Agents", href: "/dashboard/agents", icon: Truck },
+  { title: "Inventory", href: "/inventory", icon: Package },
+  { title: "Orders", href: "/orders", icon: ShoppingCart },
+  { title: "Delivery Agents", href: "/agents", icon: Truck },
+];
+
+const userMenuItems = [
+  { title: "Settings", href: "/settings", icon: Settings },
 ];
 
 export function LayoutSidebar() {
@@ -52,7 +56,9 @@ export function LayoutSidebar() {
   const initials = user?.name
     ? user.name
         .split(" ")
-        .map((n: string) => n[0])
+        .map((n: string) => {
+          return n[0];
+        })
         .join("")
         .toUpperCase()
     : "U";
@@ -61,7 +67,7 @@ export function LayoutSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="flex h-12 items-center px-4">
         <div className="flex items-center gap-2 font-bold">
-          <div className="flex h-6 w-6 items-center justify-center rounded bg-primary text-primary-foreground">
+          <div className="bg-primary text-primary-foreground flex h-6 w-6 items-center justify-center rounded">
             <LayoutDashboard className="h-4 w-4" />
           </div>
           <span className="truncate group-data-[collapsible=icon]:hidden">
@@ -74,7 +80,9 @@ export function LayoutSidebar() {
           {navItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <SidebarMenuButton
-                render={(props: any) => <Link {...props} href={item.href} />}
+                render={(props) => {
+                  return <Link {...props} href={item.href} />;
+                }}
                 isActive={pathname === item.href}
                 tooltip={item.title}
               >
@@ -90,27 +98,29 @@ export function LayoutSidebar() {
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger
-                render={(props: any) => (
-                  <SidebarMenuButton
-                    {...props}
-                    size="lg"
-                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                  >
-                    <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarFallback className="rounded-lg bg-primary/10 text-primary">
-                        {initials}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                      <span className="truncate font-semibold">
-                        {user?.name || "User"}
-                      </span>
-                      <span className="truncate text-xs text-muted-foreground">
-                        {user?.email || "user@example.com"}
-                      </span>
-                    </div>
-                  </SidebarMenuButton>
-                )}
+                render={(props: React.HTMLAttributes<HTMLElement>) => {
+                  return (
+                    <SidebarMenuButton
+                      {...props}
+                      size="lg"
+                      className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                    >
+                      <Avatar className="h-8 w-8 rounded-lg">
+                        <AvatarFallback className="bg-primary/10 text-primary rounded-lg">
+                          {initials}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                        <span className="truncate font-semibold">
+                          {user?.name || "User"}
+                        </span>
+                        <span className="text-muted-foreground truncate text-xs">
+                          {user?.email || "user@example.com"}
+                        </span>
+                      </div>
+                    </SidebarMenuButton>
+                  );
+                }}
               />
               <DropdownMenuContent
                 className="w-56 rounded-lg"
@@ -119,20 +129,22 @@ export function LayoutSidebar() {
                 sideOffset={4}
               >
                 <DropdownMenuGroup>
-                  <DropdownMenuItem className="p-0">
-                    <Link
-                      href="/dashboard/settings"
-                      className="flex items-center gap-2 w-full px-1.5 py-1"
-                    >
-                      <Settings className="h-4 w-4" />
-                      Settings
-                    </Link>
-                  </DropdownMenuItem>
+                  {userMenuItems.map((item) => (
+                    <DropdownMenuItem key={item.href} className="p-0">
+                      <Link
+                        href={item.href}
+                        className="flex w-full items-center gap-2 px-1.5 py-1"
+                      >
+                        <item.icon className="h-4 w-4" />
+                        {item.title}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={handleLogout}
-                  className="gap-2 text-destructive"
+                  className="text-destructive gap-2"
                 >
                   <LogOut className="h-4 w-4" />
                   <span>Logout</span>

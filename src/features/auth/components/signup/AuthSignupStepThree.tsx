@@ -51,7 +51,10 @@ export function AuthSignupStepThree({
         options={BUSINESS_TYPES}
         defaultValue={BUSINESS_TYPE.RETAIL}
         onChange={(val) => {
-          setValue("businessType", val as any);
+          setValue(
+            "businessType",
+            val as SignupStepThreeFormValues["businessType"],
+          );
         }}
         error={errors.businessType?.message}
       />
@@ -68,11 +71,11 @@ export function AuthSignupStepThree({
           label="I agree to the Terms of Service and Privacy Policy"
           id="termsAccepted"
           checked={watch("termsAccepted")}
-          onCheckedChange={(checked) =>
-            setValue("termsAccepted", !!checked as true, {
+          onCheckedChange={(checked) => {
+            return setValue("termsAccepted", !!checked as true, {
               shouldValidate: true,
-            })
-          }
+            });
+          }}
           error={errors.termsAccepted?.message}
         />
       </div>
