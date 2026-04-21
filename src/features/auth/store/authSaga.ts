@@ -44,11 +44,7 @@ function* handleLogin(action: PayloadAction<LoginPayload>) {
     };
 
     yield call(sessionsTable.createSession, session);
-    if (action.payload.rememberMe) {
-      localStorage.setItem(SESSION_STORAGE_KEY, "true");
-    } else {
-      sessionStorage.setItem(SESSION_STORAGE_KEY, "true");
-    }
+    localStorage.setItem(SESSION_STORAGE_KEY, "true");
 
     yield put(authSuccess(user));
   } catch (err) {
@@ -84,7 +80,7 @@ function* handleSignup(action: PayloadAction<SignupPayload>) {
     };
 
     yield call(sessionsTable.createSession, session);
-    sessionStorage.setItem(SESSION_STORAGE_KEY, "true");
+    localStorage.setItem(SESSION_STORAGE_KEY, "true");
 
     yield put(authSuccess(user));
   } catch (err) {

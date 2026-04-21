@@ -26,7 +26,7 @@ export function AgentAssignDialog({
       title="Assign Delivery Agent"
       maxWidth="sm:max-w-md"
     >
-      <div className="space-y-4 py-2">
+      <div className="space-y-4 pt-2">
         {!agents.length ? (
           <p className="text-center text-muted-foreground py-4">
             No agents found.

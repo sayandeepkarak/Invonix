@@ -24,18 +24,13 @@ export function InventoryDialog({
   onClose,
   onSubmit,
 }: InventoryDialogProps) {
-  const { 
-    currentStep, 
-    formData, 
-    handleNext, 
-    handleBack, 
-    handleFinalSubmit 
-  } = useInventoryForm({
-    open,
-    isEdit,
-    product,
-    onSubmit,
-  });
+  const { currentStep, formData, handleNext, handleBack, handleFinalSubmit } =
+    useInventoryForm({
+      open,
+      isEdit,
+      product,
+      onSubmit,
+    });
 
   const stepTitles: Record<string, string> = {
     [INVENTORY_STEPS.BASIC_INFO]: "Basic Information",
@@ -47,11 +42,15 @@ export function InventoryDialog({
     <AppDialog
       open={open}
       onOpenChange={onClose}
-      title={isEdit ? `Edit Product: ${stepTitles[currentStep]}` : `Add Product: ${stepTitles[currentStep]}`}
+      title={
+        isEdit
+          ? `Edit Product: ${stepTitles[currentStep]}`
+          : `Add Product: ${stepTitles[currentStep]}`
+      }
       maxWidth="sm:max-w-[500px]"
       footer={null}
     >
-      <div className="py-2">
+      <div className="pt-2">
         {currentStep === INVENTORY_STEPS.BASIC_INFO && (
           <InventoryStepBasicInfo
             onNext={(data) => handleNext(data, INVENTORY_STEPS.PRICING_STOCK)}

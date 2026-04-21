@@ -20,25 +20,23 @@ export function InventoryTable({
   onDelete,
 }: InventoryTableProps) {
   const filteredProducts = useMemo(() => {
-    return products
-      .filter((p) => p.isActive)
-      .filter(
-        (product) =>
-          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.category.toLowerCase().includes(searchQuery.toLowerCase()),
-      );
+    return products.filter((product) => {
+      if (!product.isActive) {
+        return false;
+      }
+      return product.name.toLowerCase().includes(searchQuery.toLowerCase());
+    });
   }, [products, searchQuery]);
 
   const columns: AppTableColumn<Product>[] = [
     {
+      header: "SKU",
+      key: "sku",
+    },
+    {
       header: "Product",
       key: "name",
       render: (product) => <span className="font-medium">{product.name}</span>,
-    },
-    {
-      header: "SKU",
-      key: "sku",
     },
     {
       header: "Category",

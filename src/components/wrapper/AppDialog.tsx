@@ -45,26 +45,22 @@ export function AppDialog({
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
-        <div className="py-4">{children}</div>
-        {footer !== undefined ? (
-          footer && <DialogFooter>{footer}</DialogFooter>
-        ) : (
-          (onSubmit || cancelLabel) && (
-            <DialogFooter>
-              <AppButton
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isLoading}
-              >
-                {cancelLabel}
+        <div className="pt-4">{children}</div>
+        {footer && (
+          <DialogFooter>
+            <AppButton
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={isLoading}
+            >
+              {cancelLabel}
+            </AppButton>
+            {onSubmit && (
+              <AppButton onClick={onSubmit} loading={isLoading}>
+                {submitLabel}
               </AppButton>
-              {onSubmit && (
-                <AppButton onClick={onSubmit} loading={isLoading}>
-                  {submitLabel}
-                </AppButton>
-              )}
-            </DialogFooter>
-          )
+            )}
+          </DialogFooter>
         )}
       </DialogContent>
     </Dialog>
